@@ -1,0 +1,41 @@
+{
+  "name": "changy",
+  "version": "1.0.0",
+  "description": "Changy makes build-in objects reactive with Proxy.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "watch": "webpack --watch --config ./webpack.config.js --mode=development",
+    "build": "webpack --config ./webpack.config.js --mode=prodduction build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lunuy/changy.git"
+  },
+  "keywords": [
+    "changy",
+    "observe",
+    "observable",
+    "array",
+    "object",
+    "primitive",
+    "types",
+    "event",
+    "reactive"
+  ],
+  "author": "Lunuy",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/Lunuy/changy/issues"
+  },
+  "homepage": "https://github.com/Lunuy/changy#readme",
+  "dependencies": {
+    "wolfy87-eventemitter": "^5.2.9"
+  },
+  "devDependencies": {
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
