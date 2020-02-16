@@ -20,10 +20,6 @@ export default function toLocaleString(
     const optionsListener = () => {
         result.set(this[O].value.toLocaleString(locales[O].value, options[O]))
     };
-    const optionListeners = [];
-    const optionListener = () => {
-        
-    };
 
     this[C].on("set", listener);
     locales[C].on("set", localesListener);

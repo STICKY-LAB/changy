@@ -9,6 +9,8 @@ import propertyIsEnumerable from "./proto/propertyIsEnumerable";
 import toString from "./proto/toString";
 import valueOf from "./proto/valueOf";
 import assign from "./static/assign";
+import Array from "../Array/Array";
+import keys from "./static/keys";
 
 export interface ObjectChangeEventEmitter extends ChangeEventEmitter {
     on(event : "set", listener : (prop : PropertyKey, value : any) => void) : this
@@ -82,11 +84,13 @@ const ObjectClass = ChangeableClass<NormalObject, ObjectChangeEventEmitter>(Norm
 }) as {
     new(value? : any) : ObjectClass,
     proto : typeof proto,
-    assign(target : Object, ...sources : object[]) : any
+    assign(target : Object, ...sources : object[]) : any,
+    keys(target : Object) : Array<string>
 };
 
 //Static functions
 ObjectClass.assign = assign;
+ObjectClass.keys = keys;
 
 
 export default ObjectClass;

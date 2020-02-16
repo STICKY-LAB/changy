@@ -24,7 +24,7 @@ export class NormalNumber extends NormalPrimitive<number> {};
 interface Number extends Primitive<number> {
     toExponential(fractionDigits? : Number) : String,
     toFixed(digits? : Number) : String,
-    //toLocaleString(locales? : String, options? : Object) : String,
+    toLocaleString(locales? : String, options? : Object) : String,
     toPrecision(precision? : Number) : String,
     toString(radix? : Number) : String,
     valueOf() : Number
@@ -34,7 +34,7 @@ interface Number extends Primitive<number> {
 const proto = {
     toExponential,
     toFixed,
-    //toLocaleString,
+    toLocaleString,
     toPrecision,
     toString,
     valueOf
@@ -45,7 +45,7 @@ const Number = ChangeableClass<NormalNumber,NumberChangeEventEmitter>(
     NormalNumber,
     proto
 ) as {
-    new(value? : number) : Number,
+    new(value : number) : Number,
     proto : typeof proto,
     isFinite(value : Number) : Boolean,
     isInteger(value : Number) : Boolean,

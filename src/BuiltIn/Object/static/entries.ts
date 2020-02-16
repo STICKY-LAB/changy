@@ -1,3 +1,4 @@
+/*
 import Object from "../Object";
 import OriginalObject from "../OriginalObject";
 import { O, C, S } from "../../../Changeable";
@@ -40,3 +41,4 @@ export default function entries(target : Object) {
 
     return result;
 }
+*/

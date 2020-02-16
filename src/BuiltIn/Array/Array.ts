@@ -51,6 +51,7 @@ const Array = ChangeableClass<NormalArray<any>, ArrayChangeEventEmitter<any>>(No
         return true;
     },
     deleteProperty(target, prop) {
+        if(Number(prop) >= this.length) return true;
         const beforeValue = (<any>target[O])[prop];
         delete (<any>target[O])[prop];
         target[C].emit("insert", prop, [beforeValue], new OriginalArray(1));

@@ -5,7 +5,8 @@ import ChangeableClass from "./ChangeableClass/ChangeableClass";
 import Object from "./BuiltIn/Object/Object";
 import Array from "./BuiltIn/Array/Array";
 import Number from "./BuiltIn/Number/Number";
-//import ChangeableFunction, { StopableChangeableInstance } from "./ChangeableFunction";
+import Function from "./BuiltIn/Function/Function";
+import Boolean from "./BuiltIn/Boolean/Boolean";
 
 export {
     Changeable,
@@ -17,10 +18,12 @@ export {
     ChangeableClass,
 
     //Built-ins.
-    Primitive,
+    Primitive, //완성
     Object,
     Array,
-    Number
+    Number,    //완성
+    Function,
+    Boolean    //완성
 };
 
 var a = new Number(45);
