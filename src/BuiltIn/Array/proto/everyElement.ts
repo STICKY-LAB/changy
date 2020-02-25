@@ -1,28 +1,27 @@
 import Array from "../Array";
-import Primitive from "../../Primitive/Primitive";
 import Function from "../../Function/Function";
+import Primitive from "../../Primitive/Primitive";
 import Boolean from "../../Boolean/Boolean";
 import { O, C, S } from "../../../Changeable";
-import OriginalFunction from "../../Function/OriginalFunction";
 
 
-/*
-Array.every give target array and index to the callback.
-So, if array is changed, "Array.every(...)" result can change.
+type Callback<T> = (element : T) => boolean;
 
-If you want check only value of array, use everyElement.
-*/
-
-type Callback<T> = (element : T, index : number, array : T[]) => boolean;
-
-export default function every<T>(
+export default function everyElement<T>(
     this : Array<T>,
     callback : Function<Callback<T>>,
     thisArg : Primitive<any> = new Primitive(undefined)
 ) {
-    const result = new Boolean(this[O].every(<any>callback[O].value, thisArg[O].value));
+    const result = new Boolean(this[O].every(callback[O].value, thisArg[O].value));
 
     const listener = (start : number, deleted : T[], inserted : T[]) => {
+        if(result[O].value) {
+            result.set(inserted.every(callback[O].value, thisArg[O].value));
+        } else {
+            if(!deleted.every(callback[O].value)) {
+                result.set(this[O].every(callback[O].value, thisArg[O].value));
+            }
+        }
         result.set(this[O].every(callback[O].value, thisArg[O].value));
     };
     const callbackListener = (f : Callback<T>) => {

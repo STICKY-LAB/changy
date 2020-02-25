@@ -19,7 +19,7 @@ export default function concat<T>(this : Array<T>, arrays : Array<Array<any>> = 
         };
     }
 
-    const thisListener = ((start : number, deleted : any[], array : any[]) => {
+    const thisListener = ((start : number, deleted : T[], array : T[]) => {
         result.splice(start, deleted.length, ...array);
     });
     const arraysListener = (start : number, deleted : Array<any>[], items : Array<any>[]) => {

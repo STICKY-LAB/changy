@@ -1,4 +1,4 @@
-const { Primitive, Object, Array, Number, O, C, S } = require("../dist/index");
+const { Primitive, Object, Number, O, C, S } = require("../dist/index");
 
 console.log("--- Primitive test ---");
 (() => {
@@ -11,4 +11,3 @@ console.log("--- Primitive test ---");
     
     a.set(400);
 })();
-

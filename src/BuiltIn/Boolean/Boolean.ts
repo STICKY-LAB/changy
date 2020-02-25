@@ -24,7 +24,7 @@ const Boolean = ChangeableClass<NormalBoolean,BooleanChangeEventEmitter>(
     NormalBoolean,
     proto
 ) as {
-    new(value? : boolean) : Boolean,
+    new(value : boolean) : Boolean,
     proto : typeof proto
 };
 

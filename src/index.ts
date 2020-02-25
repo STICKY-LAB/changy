@@ -26,7 +26,4 @@ export {
     Boolean    //완성
 };
 
-var a = new Number(45);
-a
-
-//QOVSC
+//QVOCS

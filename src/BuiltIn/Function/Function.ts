@@ -12,14 +12,14 @@ import Number from "../Number/Number";
 import length from "./proto/length";
 import name from "./proto/name";
 
-export interface FunctionChangeEventEmitter extends PrimitiveChangeEventEmitter<OriginalFunction> {};
+export interface FunctionChangeEventEmitter<T extends OriginalFunction> extends PrimitiveChangeEventEmitter<T> {};
 
-export class NormalFunction extends NormalPrimitive<OriginalFunction> {};
+export class NormalFunction<T extends OriginalFunction> extends NormalPrimitive<T> {};
 
-interface Function extends Primitive<OriginalFunction> {
+interface Function<T extends OriginalFunction> extends Primitive<T> {
     call(thisArg? : Primitive<any>, argsArray? : Array<Changeable<any,any>>) : Primitive<any>,
     apply(thisArg : Primitive<any>, argsArray? : Array<any>) : Primitive<any>
-    bind(thisArg : Primitive<any>, argsArray? : Array<any>) : Function
+    bind<O extends OriginalFunction>(thisArg : Primitive<any>, argsArray? : Array<any>) : Function<O>
     toString() : String,
     length : Number,
     name : String
@@ -39,11 +39,11 @@ const proto = {
 };
 Object.setPrototypeOf(proto, Primitive.proto); //Extends Primitive.
 
-const Function = ChangeableClass<NormalFunction, FunctionChangeEventEmitter>(
+const Function = ChangeableClass<NormalFunction<any>, FunctionChangeEventEmitter<any>>(
     NormalFunction,
     proto
 ) as {
-    new(value : OriginalFunction) : Function
+    new<T extends OriginalFunction>(value : T) : Function<T>
     proto : typeof proto
 };
 
