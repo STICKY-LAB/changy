@@ -4,7 +4,7 @@ import { O, C, S } from "../../../Changeable";
 import OriginalFunction from "../OriginalFunction";
 
 
-export default function length(this : Function) {
+export default function length<T extends OriginalFunction>(this : Function<T>) {
     const result = new Number(this[O].value.length);
 
     const listener = (f : OriginalFunction) => {

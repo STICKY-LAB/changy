@@ -5,7 +5,7 @@ import Array from "../../Array/Array";
 import OriginalFunction from "../OriginalFunction";
 
 
-export default function bind(this : Function, thisArg : Primitive<any>, argsArray : Array<Changeable<any, any>> = new Array()) {
+export default function bind<T extends OriginalFunction>(this : Function<T>, thisArg : Primitive<any>, argsArray : Array<Changeable<any, any>> = new Array()) {
     const result = new Function(this[O].value.bind(thisArg[O].value, ...argsArray[O].map(arg => arg[O])));
 
     const listenArg = (arg : Changeable<any,any>) => {

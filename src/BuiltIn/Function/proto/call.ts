@@ -5,7 +5,7 @@ import Array from "../../Array/Array";
 import OriginalFunction from "../OriginalFunction";
 
 
-export default function call(this : Function, thisArg : Primitive<any> = new Primitive(undefined), argsArray : Array<Changeable<any, any>> = new Array()) {
+export default function call<T extends OriginalFunction>(this : Function<T>, thisArg : Primitive<any> = new Primitive(undefined), argsArray : Array<Changeable<any, any>> = new Array()) {
     const result = new Primitive(this[O].value.call(thisArg[O].value, ...argsArray[O].map(arg => arg[O])));
 
     const listenArg = (arg : Changeable<any,any>) => {

@@ -4,7 +4,7 @@ import { O, C, S } from "../../../Changeable";
 import OriginalFunction from "../OriginalFunction";
 
 
-export default function toString(this : Function) {
+export default function toString<T extends OriginalFunction>(this : Function<T>) {
     const result = new String(this[O].value.toString());
 
     const listener = (f : OriginalFunction) => {

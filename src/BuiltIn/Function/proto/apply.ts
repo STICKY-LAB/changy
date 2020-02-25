@@ -4,7 +4,7 @@ import { O, C, S } from "../../../Changeable";
 import Array from "../../Array/Array";
 import OriginalFunction from "../OriginalFunction";
 
-export default function apply(this : Function, thisArg : Primitive<any>, argsArray : Array<any> = new Array()) {
+export default function apply<T extends OriginalFunction>(this : Function<T>, thisArg : Primitive<any>, argsArray : Array<any> = new Array()) {
     const result = new Primitive(this[O].value.apply(thisArg[O].value, argsArray[O]));
 
     const listener = (f : OriginalFunction) => {

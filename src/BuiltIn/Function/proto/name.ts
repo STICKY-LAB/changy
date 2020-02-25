@@ -4,7 +4,7 @@ import OriginalFunction from "../OriginalFunction";
 import String from "../../String/String";
 
 
-export default function name(this : Function) {
+export default function name<T extends OriginalFunction>(this : Function<T>) {
     const result = new String(this[O].value.name);
 
     const listener = (f : OriginalFunction) => {
