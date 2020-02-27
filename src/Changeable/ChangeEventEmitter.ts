@@ -20,10 +20,7 @@ class ChangeEventEmitter extends EventEmitter {
         });
         super.emitEvent(<any>evt, args);
         return this;
-    }/*
-    change(name : string, ...args : any[]) {
-        return this.emit(name, ...args);
-    }*/
+    }
 };
 
 export default ChangeEventEmitter;

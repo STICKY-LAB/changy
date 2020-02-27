@@ -1,7 +1,7 @@
 {
   "name": "changy",
-  "version": "2.0.0",
-  "description": "Changy makes build-in objects reactive with Proxy. Extensible.",
+  "version": "5.0.0",
+  "description": "Changy makes built-in objects reactive. Extensible.",
   "main": "./dist/index.js",
   "scripts": {
     "watch": "webpack --watch --config ./webpack.config.js --mode=development",

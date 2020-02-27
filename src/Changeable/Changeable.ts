@@ -5,8 +5,11 @@ export const C = Symbol("ChangeEventEmitter");
 export const O = Symbol("OriginalObject");
 export const S = Symbol("StopChange");    //Stop change.
 
-export default interface Changeable<T, ChangeEventEmitterT extends ChangeEventEmitter> {
-    readonly [O]:T,
-    readonly [C]:ChangeEventEmitterT,
+export default abstract class Changeable {
+    readonly [C]:ChangeEventEmitter;
+    readonly abstract [O]:object;
     [S]:()=>void
+    constructor() {
+        this[C] = new ChangeEventEmitter;
+    }
 };

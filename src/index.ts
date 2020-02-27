@@ -1,12 +1,8 @@
-import Changeable, { O, C, S } from "./Changeable";
-import ChangeEventEmitter from "./ChangeEventEmitter";
+import Changeable, { O, C, S } from "./Changeable/Changeable";
+import ChangeEventEmitter from "./Changeable/ChangeEventEmitter";
 import Primitive from "./BuiltIn/Primitive/Primitive";
-import ChangeableClass from "./ChangeableClass/ChangeableClass";
-import Object from "./BuiltIn/Object/Object";
-import Array from "./BuiltIn/Array/Array";
-import Number from "./BuiltIn/Number/Number";
-import Function from "./BuiltIn/Function/Function";
-import Boolean from "./BuiltIn/Boolean/Boolean";
+import Array from "./BuiltIn/Object/Array";
+import Number from "./BuiltIn/Primitive/Number";
 
 export {
     Changeable,
@@ -14,16 +10,17 @@ export {
     O,
     C,
     S,
-
-    ChangeableClass,
-
-    //Built-ins.
-    Primitive, //완성
-    Object,
+    
+    /* Built-in */
+    Primitive,
     Array,
-    Number,    //완성
-    Function,
-    Boolean    //완성
+    Number
 };
 
-//QVOCS
+/**
+ * Q
+ * Value
+ * OriginalObject
+ * ChangeEventEmitter
+ * Stop
+ */

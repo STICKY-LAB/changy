@@ -10,4 +10,5 @@ console.log("--- Primitive test ---");
     });
     
     a.set(400);
+    a.set(400);
 })();
