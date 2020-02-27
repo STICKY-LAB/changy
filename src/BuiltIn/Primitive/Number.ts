@@ -5,6 +5,19 @@ import Object from "../Object/Object";
 import OriginalNumber from "../Originals/Number";
 import Boolean from "./Boolean";
 
+interface NumberFormatOptions {
+    localeMatcher?: string;
+    style?: string;
+    currency?: string;
+    currencyDisplay?: string;
+    useGrouping?: boolean;
+    minimumIntegerDigits?: number;
+    minimumFractionDigits?: number;
+    maximumFractionDigits?: number;
+    minimumSignificantDigits?: number;
+    maximumSignificantDigits?: number;
+}
+
 export default class Number extends Primitive<number> {
     toExponential(fractionDigits : Number = <any> new Primitive(undefined)) {
         const result = new String(this[O].value.toExponential(fractionDigits[O].value));
@@ -44,7 +57,7 @@ export default class Number extends Primitive<number> {
         };
         return result;
     }
-    toLocaleString(locales : String = <any> new Primitive(undefined), options : Object = <any> new Object(undefined)) {
+    toLocaleString(locales : String = <any> new Primitive(undefined), options : Object<NumberFormatOptions> = <any> new Object(undefined)) {
         const result = new String(this[O].value.toLocaleString(locales[O].value, options[O]));
         
         const listener = (value : number) => {
