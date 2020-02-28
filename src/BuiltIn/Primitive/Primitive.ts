@@ -1,4 +1,4 @@
-import Changeable, { O, C, OC } from "../../Changeable/Changeable";
+import Changeable, { O, C } from "../../Changeable/Changeable";
 import ChangeEventEmitter from "../../Changeable/ChangeEventEmitter";
 
 export class NormalPrimitive<T> {

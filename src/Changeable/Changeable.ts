@@ -1,8 +1,6 @@
 
 import ChangeEventEmitter from "./ChangeEventEmitter";
 
-export const OC = Symbol("OriginalConstructor");
-
 export const C = Symbol("ChangeEventEmitter");
 export const O = Symbol("OriginalObject");
 export const S = Symbol("StopChange");    //Stop change.
