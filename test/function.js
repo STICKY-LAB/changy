@@ -1,7 +1,5 @@
 const { Number, Array, Function, Primitive, O, C, S } = require("../dist/index");
 
-//NOT SUPPORT YET>
-
 console.log("--- Function test ---");
 (() => {
 
@@ -16,7 +14,7 @@ console.log("--- Function test ---");
         const b = new Number(3);
         const c = new Number(6);
 
-        const args = new Array(b, c);
+        const args = new Array([b, c]);
         const sum = f.call(a, args);
 
         sum[C].on("set", value => {
@@ -41,7 +39,7 @@ console.log("--- Function test ---");
         const b = 3;
         const c = 6;
 
-        const args = new Array(b, c);
+        const args = new Array([b, c]);
         const sum = f.apply(a, args);
 
         sum[C].on("set", value => {
@@ -50,9 +48,7 @@ console.log("--- Function test ---");
 
         a.set(2);
         args.push(7);
-        args[0] = -9;
-
-        sum[S]();
+        args.set(0, -9);
     }
 
     //bind
@@ -66,10 +62,10 @@ console.log("--- Function test ---");
         const b = new Number(2);
         const c = new Number(3);
 
-        const bindArgs = new Array();
+        const bindArgs = new Array([]);
         const bindedF = f.bind(a, bindArgs);
 
-        const args = new Array();
+        const args = new Array([]);
         const sum = bindedF.call(new Primitive(null), args);
 
         sum[C].on("set", value => {
