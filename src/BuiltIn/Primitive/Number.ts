@@ -1,4 +1,4 @@
-import Primitive from "./Primitive";
+import Primitive, { NormalPrimitive } from "./Primitive";
 import { O, C, S } from "../../Changeable/Changeable";
 import String from "./String";
 import Object from "../Object/Object";

@@ -2,11 +2,11 @@ const { Primitive, Object, Array, Number, O, C, S } = require("../dist/index");
 
 console.log("--- Array test ---");
 (() => {
-    const array1 = new Array;
-    const array2 = new Array;
-    const array3 = new Array;
+    const array1 = new Array([]);
+    const array2 = new Array([]);
+    const array3 = new Array([]);
 
-    const concatArrays = new Array(array2);
+    const concatArrays = new Array([array2]);
     const concated = array1.concat(concatArrays);
     concated[C].onAny(() => {
         console.log(concated[O]);

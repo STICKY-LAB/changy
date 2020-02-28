@@ -18,15 +18,9 @@ export interface ArrayChangeEventEmitter<T> extends ChangeEventEmitter {
     emit(event : RegExp, ...args : any): this
 }
 
-export default class Array<T> extends Changeable {
+export default class Array<T> extends Changeable<OriginalArray<T>> {
     readonly [C]: ArrayChangeEventEmitter<T>
     readonly [O]: OriginalArray<T>;
-    constructor(arrayLength? : number);
-    constructor(...items : T[]);
-    constructor(...args : any) {
-        super();
-        this[O] = new OriginalArray<T>(...args);
-    }
     get(index : number) {
         const result = new Primitive<T>(this[O][index]);
         const listener = () => {
@@ -88,8 +82,8 @@ export default class Array<T> extends Changeable {
     }
 
     //Pure
-    concat(arrays : Array<Array<any>> = new Array()) {
-        const result = new Array(...this[O], ...OriginalArray.prototype.concat(...arrays[O].map(array => array[O])));
+    concat(arrays : Array<Array<any>> = new Array([])) {
+        const result = new Array([...this[O], ...OriginalArray.prototype.concat(...arrays[O].map(array => array[O]))]);
         
         const arrayListenerRemovers : (() => void)[] = [];
         const listenArray = (array : Array<any>) => {

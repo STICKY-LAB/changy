@@ -1,5 +1,7 @@
 const { Number, Array, Function, Primitive, O, C, S } = require("../dist/index");
 
+//NOT SUPPORT YET>
+
 console.log("--- Function test ---");
 (() => {
 

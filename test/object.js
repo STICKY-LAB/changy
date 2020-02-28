@@ -1,5 +1,6 @@
 const { Primitive, Object, Array, Number, O, C, S } = require("../dist/index");
 
+//NOT SUPPORT YET>
 console.log("--- Object test ---");
 (() => {
     const obj = new Object();

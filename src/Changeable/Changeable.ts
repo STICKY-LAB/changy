@@ -1,15 +1,18 @@
 
 import ChangeEventEmitter from "./ChangeEventEmitter";
 
+export const OC = Symbol("OriginalConstructor");
+
 export const C = Symbol("ChangeEventEmitter");
 export const O = Symbol("OriginalObject");
 export const S = Symbol("StopChange");    //Stop change.
 
-export default abstract class Changeable {
+export default abstract class Changeable<T extends Object> {
     readonly [C]:ChangeEventEmitter;
-    readonly abstract [O]:object;
+    readonly abstract [O]:T;
     [S]:()=>void
-    constructor() {
+    constructor(originalObject : T) {
         this[C] = new ChangeEventEmitter;
+        this[O] = originalObject;
     }
 };

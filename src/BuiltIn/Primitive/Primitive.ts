@@ -1,4 +1,4 @@
-import Changeable, { O, C } from "../../Changeable/Changeable";
+import Changeable, { O, C, OC } from "../../Changeable/Changeable";
 import ChangeEventEmitter from "../../Changeable/ChangeEventEmitter";
 
 export class NormalPrimitive<T> {
@@ -21,12 +21,11 @@ export interface PrimitiveChangeEventEmitter<T> extends ChangeEventEmitter {
     emit(event : RegExp, ...args : any): this
 }
 
-class Primitive<T> extends Changeable  {
-    readonly [C]:PrimitiveChangeEventEmitter<T>
+class Primitive<T> extends Changeable<NormalPrimitive<T>> {
+    readonly [C]: PrimitiveChangeEventEmitter<T>
     readonly [O]: NormalPrimitive<T>
     constructor(value : T) {
-        super();
-        this[O] = new NormalPrimitive(value);
+        super(new NormalPrimitive(value));
     }
     set(value : T) {
         if(value === this[O].value) return;
