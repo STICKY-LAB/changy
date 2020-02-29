@@ -548,7 +548,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         const listener = (start : number, deleted : T[], inserted : T[]) => {
             result.splice(start, deleted.length, ...inserted.map(callback[O].value));
         };
-        const callbackListener = (f : PureElementCallback<T, boolean>) => {
+        const callbackListener = (f : PureElementCallback<T, R>) => {
             result.splice(0, result[O].length, ...this[O].map(f));
         };
     
