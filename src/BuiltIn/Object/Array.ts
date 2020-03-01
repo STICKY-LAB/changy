@@ -133,14 +133,15 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         return result;
     }
     splice(start : number, deleteCount? : number, ...items : T[]) {
-        if(deleteCount === 0 && items.length === 0) return [];
         const beforeLength = this[O].length;
-        const result = deleteCount ? this[O].splice(start, deleteCount, ...items) : this[O].splice(start);
-        this[C].emit("splice",
-            realIndex(start, beforeLength),
-            result,
-            items
-        );
+        const result = deleteCount !== undefined ? this[O].splice(start, deleteCount, ...items) : this[O].splice(start);
+        if(!(deleteCount === 0 && items.length === 0)) {
+            this[C].emit("splice",
+                realIndex(start, beforeLength),
+                result,
+                items
+            );
+        }
         return result;
     }
 

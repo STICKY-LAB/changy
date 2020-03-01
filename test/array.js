@@ -16,6 +16,7 @@ console.log("--- Array test ---");
             console.log(concated[O]);
         });
 
+        
         array1.push(80);
         array2.push(4444);
         array1.set(2, 40);
@@ -24,7 +25,7 @@ console.log("--- Array test ---");
         concatArrays.push(array3);
         concatArrays.splice(0,1);
         concatArrays.splice(0,1);
-        concated[S]();
+        
     }
 
     // fill
