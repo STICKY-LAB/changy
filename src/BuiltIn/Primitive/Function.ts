@@ -6,6 +6,33 @@ import Number from "../Primitive/Number";
 import Changeable, { O, C, S } from "../../Changeable/Changeable";
 
 export default class Function<T extends OriginalFunction> extends Primitive<T> {
+    length = (() => {
+        const result = new Number(this[O].value.length);
+    
+        const listener = (f : OriginalFunction) => {
+            result.set(f.length);
+        };
+    
+        this[C].on("set", listener);
+    
+        return result;
+    })()
+    name = (() => {
+        const result = new String(this[O].value.name);
+    
+        const listener = (f : OriginalFunction) => {
+            result.set(f.name);
+        };
+    
+        this[C].on("set", listener);
+    
+        result[S] = () => {
+            this[C].off("set", listener);
+        };
+    
+        return result;
+    })()
+    
     apply(thisArg : Primitive<any>, argsArray : Array<any> = new Array([])) {
         const result = new Primitive(this[O].value.apply(thisArg[O].value, argsArray[O]));
     
@@ -116,36 +143,6 @@ export default class Function<T extends OriginalFunction> extends Primitive<T> {
     
         const listener = (f : OriginalFunction) => {
             result.set(f.toString());
-        };
-    
-        this[C].on("set", listener);
-    
-        result[S] = () => {
-            this[C].off("set", listener);
-        };
-    
-        return result;
-    }
-    get length() {
-        const result = new Number(this[O].value.length);
-    
-        const listener = (f : OriginalFunction) => {
-            result.set(f.length);
-        };
-    
-        this[C].on("set", listener);
-    
-        result[S] = () => {
-            this[C].off("set", listener);
-        };
-    
-        return result;
-    }
-    get name() {
-        const result = new String(this[O].value.name);
-    
-        const listener = (f : OriginalFunction) => {
-            result.set(f.name);
         };
     
         this[C].on("set", listener);

@@ -87,6 +87,19 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         return result;
     }
 
+    //Property
+    length = (() => {
+        const result = new Number(this[O].length);
+
+        const listener = () => {
+            result.set(this[O].length);
+        };
+
+        this[C].on("splice", listener);
+
+        return result;
+    })()
+
     //Changer
     copyWithin(target : number, start : number = 0, end : number = this[O].length) {
         const start_ = realIndex(start, this[O].length);
@@ -443,7 +456,6 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         fromIndex[C].on("set", fromIndexListener);
 
         result[S] = () => {
-            length[S]();
             fromIndex[S]();
             this[C].off("splice", listener);
             valueToFind[C].off("set", valueToFindListener);
@@ -489,7 +501,6 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         fromIndex[C].on("set", fromIndexListener);
 
         result[S] = () => {
-            length[S]();
             fromIndex[S]();
             this[C].off("splice", listener);
             searchElement[C].off("set", searchElementListener);
@@ -665,26 +676,10 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         end[C].on("set", endListener);
 
         result[S] = () => {
-            length[S]();
             begin[S]();
             end[S]();
             this[C].off("splice", listener);
         };
-
-        return result;
-    }
-    get length() {
-        const result = new Number(this[O].length);
-
-        const listener = () => {
-            result.set(this[O].length);
-        };
-
-        this[C].on("splice", listener);
-
-        result[S] = () => {
-            this[C].off("splice", listener);
-        }
 
         return result;
     }
