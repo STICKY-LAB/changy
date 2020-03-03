@@ -8,7 +8,7 @@ export const S = Symbol("StopChange");    //Stop change.
 export default abstract class Changeable<T extends Object> {
     readonly [C]:ChangeEventEmitter;
     readonly abstract [O]:T;
-    [S]:()=>void
+    [S]:()=>void = ()=>{}
     constructor(originalObject : T) {
         this[C] = new ChangeEventEmitter;
         this[O] = originalObject;
