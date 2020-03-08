@@ -1,45 +1,77 @@
-const { Primitive, Object, Array, Number, O, C, S } = require("../dist/index");
+const { Primitive, Object, Array, Number, O, C, S, Function } = require("../dist/index");
 
-//NOT SUPPORT YET>
 console.log("--- Object test ---");
 (() => {
-    const obj = new Object();
-    const hasOwnProperty = Object.proto.hasOwnProperty.call(obj, new Primitive("jam"));
-    hasOwnProperty[C].on("set", value => {
-        console.log(`hasOwnProperty("jam") : ${value}`);
-    });
+    // keys
+    console.log("- keys -");
+    {
+        const obj = new Object({});
+        const keys = Object.Keys(obj);
+        keys[C].onAny(() => {
+            console.log(keys[O]);
+        });
+    
+        obj.set(8, "eight");
+        obj.set(2**32 - 2, "minus 2");
+        obj.set(1, "one");
+        obj.set("tasty", "jam");
+        obj.set(2**32 - 1, "minus 1");
+        obj.unset(1);
+        obj.set("tasty", "jammm");
+    }
 
-    console.log("- hasOwnProperty -")
-    obj.ha = 3;
-    obj.jam = 3;
-    obj.jam = "siba";
-    delete obj.jam;
+    // values
+    console.log("- values -");
+    {
+        const obj = new Object({});
+        const values = Object.Values(obj);
+        values[C].onAny(() => {
+            console.log(values[O]);
+        });
+    
+        obj.set(8, "eight");
+        obj.set(2**32 - 2, "minus 2");
+        obj.set(1, "one");
+        obj.set("tasty", "jam");
+        obj.set(2**32 - 1, "minus 1");
+        obj.unset(1);
+        obj.set("tasty", "jammm");
+    }
 
-    hasOwnProperty[S]();
+    // entries
+    console.log("- entries -");
+    {
+        const obj = new Object({});
+        const entries = Object.Entries(obj);
+        entries[C].onAny(() => {
+            console.log(entries[O]);
+        });
+    
+        obj.set(8, "eight");
+        obj.set(2**32 - 2, "minus 2");
+        obj.set(1, "one");
+        obj.set("tasty", "jam");
+        obj.set(2**32 - 1, "minus 1");
+        obj.unset(1);
+        obj.set("tasty", "jammm");
+    }
 
-    console.log("- value set, assign -")
-    const objJam = obj.jam;
-    objJam[C].on("set", value => {
-        console.log(`obj.jam : ${value}`);
-    });
+    // map using Entries, Map and FromEntries
+    console.log("- map -");
+    {
+        const obj = new Object({});
+        const entries = Object.Entries(obj);
+        const mapped = Object.FromEntries(entries.Map(new Function(([prop, value]) => {
+            return ["value_of_" + prop, value * 2];
+        })));
+    
+        mapped[C].onAny(() => {
+            console.log(mapped[O]);
+        });
 
-    obj.jam = 43;
-    delete obj.jam;
-
-    console.log(obj[O]);
-    Object.assign(obj, {jam:40, a:40}, {jam:0});
-    console.log(obj[O]);
-
-    objJam[S]();
-
-    const keys = Object.keys(obj);
-    keys[C].onAny(() => {
-        console.log(keys[O]);
-    });
-
-    obj[8] = 4;
-    obj[2**32 - 2] = 8;
-    obj[1] = 9;
-    obj[2**32 - 1] = 8;
-    delete obj[1];
+        obj.set("a", 40);
+        obj.set("b", 80);
+        obj.set("c", 90);
+        obj.unset("a");
+    }
 })();

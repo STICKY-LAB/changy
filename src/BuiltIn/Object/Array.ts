@@ -42,6 +42,7 @@ export type ElementCallback<T, R> = (element : T, index: number, array: T[]) => 
 export type PureElementCallback<T, R> = (element : T) => R;
 export type ReduceCallback<T, R> = (accumulator : R, element : T, index : number, array : T[]) => R
 export type PureReduceCallback<T, R> = (accumulator : R, element : T) => R
+export type CompareCallback<T, R> = (a : T, b : T) => R
 
 export interface ArrayChangeEventEmitter<T> extends ChangeEventEmitter {
     on(event : "splice", listener : (index : number, deleted : T[], inserted : T[]) => void) : this
@@ -56,7 +57,7 @@ export interface ArrayChangeEventEmitter<T> extends ChangeEventEmitter {
 export default class Array<T> extends Changeable<OriginalArray<T>> {
     readonly [C]: ArrayChangeEventEmitter<T>
     readonly [O]: OriginalArray<T>;
-    get(index : Number) {
+    Get(index : Number) {
         const result = new Primitive<T>(this[O][index[O].value]);
         const listener = () => {
             result.set(this[O][index[O].value]);
@@ -87,7 +88,6 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         return result;
     }
 
-    //Property
     length = (() => {
         const result = new Number(this[O].length);
 
@@ -100,7 +100,6 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         return result;
     })()
 
-    //Changer
     copyWithin(target : number, start : number = 0, end : number = this[O].length) {
         const start_ = realIndex(start, this[O].length);
         const end_ = realIndex(end, this[O].length);
@@ -158,8 +157,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         return result;
     }
 
-    //Pure
-    concat(arrays : Array<Array<any>> = new Array([])) {
+    Concat(arrays : Array<Array<any>> = new Array([])) {
         const result = new Array([...this[O], ...OriginalArray.prototype.concat(...arrays[O].map(array => array[O]))]);
         
         const arrayListenerRemovers : (() => void)[] = [];
@@ -195,7 +193,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         });
         return result;
     }
-    impureEvery(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
+    ImpureEvery(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
         const result = new Boolean(this[O].every(<any>callback[O].value, thisArg[O].value));
     
         const listener = (start : number, deleted : T[], inserted : T[]) => {
@@ -220,7 +218,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    every(callback : Function<PureElementCallback<T, boolean>>) {
+    Every(callback : Function<PureElementCallback<T, boolean>>) {
         let callbackResults = this[O].map(callback[O].value);
         const result = new Boolean(callbackResults.every(isPassed => isPassed));
     
@@ -253,7 +251,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    impureFilter(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
+    ImpureFilter(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
         const result = new Array(this[O].filter(<any>callback[O].value, thisArg[O].value));
     
         const listener = (start : number, deleted : T[], inserted : T[]) => {
@@ -278,7 +276,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    filter(callback : Function<PureElementCallback<T, boolean>>) {
+    Filter(callback : Function<PureElementCallback<T, boolean>>) {
         let callbackResults = this[O].map(callback[O].value);
         const result = new Array(this[O].filter((element, index) => callbackResults[index]));
     
@@ -305,7 +303,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    impureFind(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
+    ImpureFind(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
         const result = new Primitive(this[O].find(callback[O].value, thisArg[O].value));
     
         const listener = (start : number, deleted : T[], inserted : T[]) => {
@@ -330,9 +328,9 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    find(callback : Function<PureElementCallback<T, boolean>>) {
-        const index = this.findIndex(callback);
-        const result = this.get(index);
+    Find(callback : Function<PureElementCallback<T, boolean>>) {
+        const index = this.FindIndex(callback);
+        const result = this.Get(index);
     
         result[S] = () => {
             index[S]();
@@ -341,7 +339,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    impureFindIndex(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
+    ImpureFindIndex(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
         const result = new Number(this[O].findIndex(callback[O].value, thisArg[O].value));
     
         const listener = (start : number, deleted : T[], inserted : T[]) => {
@@ -366,7 +364,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    findIndex(callback : Function<PureElementCallback<T, boolean>>) {
+    FindIndex(callback : Function<PureElementCallback<T, boolean>>) {
         let callbackResults = this[O].map(callback[O].value);
         const result = new Number(this[O].findIndex((element, index) => callbackResults[index]));
     
@@ -418,7 +416,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     // flatMap() { //NOT COMPLETE
 
     // }
-    includes(valueToFind : Primitive<T>, fromIndex_ : Number = new Number(0)) {
+    Includes(valueToFind : Primitive<T>, fromIndex_ : Number = new Number(0)) {
         const result = new Boolean(this[O].includes(valueToFind[O].value, fromIndex_[O].value));
         const length = this.length;
         const fromIndex = changeableRealIndex(fromIndex_, length);
@@ -463,7 +461,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         };
         return result;
     }
-    indexOf(searchElement : Primitive<T>, fromIndex_ : Number = new Number(0)) {
+    IndexOf(searchElement : Primitive<T>, fromIndex_ : Number = new Number(0)) {
         const result = new Number(this[O].indexOf(searchElement[O].value, fromIndex_[O].value));
         const length = this.length;
         const fromIndex = changeableRealIndex(fromIndex_, length);
@@ -508,7 +506,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         };
         return result;
     }
-    join(separator : String = new String("")) { //efficiency not good. I think we need "ArrayString" class.
+    Join(separator : String = new String("")) { //efficiency not good. I think we need "ArrayString" class.
         const result = new String(this[O].join(separator[O].value));
 
         const listener = () => {
@@ -529,7 +527,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         return result;
     }
     //lastIndexOf
-    impureMap<R>(callback : Function<ElementCallback<T, R>>, thisArg : Primitive<any> = new Primitive(undefined)) {
+    ImpureMap<R>(callback : Function<ElementCallback<T, R>>, thisArg : Primitive<any> = new Primitive(undefined)) {
         const result = new Array(this[O].map(<any>callback[O].value, thisArg[O].value));
     
         const listener = (start : number, deleted : T[], inserted : T[]) => {
@@ -554,7 +552,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    map<R>(callback : Function<PureElementCallback<T, R>>) {
+    Map<R>(callback : Function<PureElementCallback<T, R>>) {
         const result = new Array(this[O].map(callback[O].value));
     
         const listener = (start : number, deleted : T[], inserted : T[]) => {
@@ -574,9 +572,9 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     
         return result;
     }
-    reduce(callback : Function<PureReduceCallback<T, T>>) : Primitive<T>
-    reduce<R>(callback : Function<PureReduceCallback<T, T>>, initialValue : Primitive<R>) : Primitive<R>
-    reduce<R>(callback : Function<PureReduceCallback<T, R>>, initialValue? : Primitive<R>) {
+    Reduce(callback : Function<PureReduceCallback<T, T>>) : Primitive<T>
+    Reduce<R>(callback : Function<PureReduceCallback<T, T>>, initialValue : Primitive<R>) : Primitive<R>
+    Reduce<R>(callback : Function<PureReduceCallback<T, R>>, initialValue? : Primitive<R>) {
         let reduceds : (R|T)[] = [];
         if(this[O].length) reduceds.push(initialValue ? callback[O].value(initialValue[O].value, this[O][0]) : this[O][0]);
         for(let i = 1; i < this[O].length; i++) {
@@ -633,7 +631,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
 
         return result;
     }
-    slice(begin_ : Number = new Number(0), end_? : Number) {
+    Slice(begin_ : Number = new Number(0), end_? : Number) {
         const result = new Array(this[O].slice(begin_[O].value, end_[O].value));
         const length = this.length;
         if(!end_) end_ = length;
@@ -683,9 +681,36 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
 
         return result;
     }
+    Sort(compareFunction : Function<CompareCallback<T, number>> = new Function((a, b) => (a > b) ? 1 : -1)) {
+        const result = new Array(OriginalArray.from(this[O]).sort(compareFunction[O].value));
 
-    //Function
-    forEach(callback : ElementCallback<T, boolean>, thisArg? : any) {
-        return this[O].forEach(callback, thisArg);
+        const listener = (start : number, deleted : T[], inserted : T[]) => {
+            deleted.forEach(deletedElement => {
+                result.splice(result[O].indexOf(deletedElement), 1);
+            });
+            inserted.forEach(insertedElement => {
+                const index = result[O].findIndex(element => {
+                    return compareFunction[O].value(element, insertedElement) > 0;
+                });
+                if(index === -1) {
+                    result.push(insertedElement);
+                } else {
+                    result.splice(index, 0, insertedElement);
+                }
+            });
+        };
+        const compareFunctionListener = (compareFunction : CompareCallback<T, number>) => {
+            result.splice(0, result[O].length, ...this[O].sort(compareFunction));
+        };
+
+        this[C].on("splice", listener);
+        compareFunction[C].on("set", compareFunctionListener);
+
+        result[S] = () => {
+            this[C].off("splice", listener);
+            compareFunction[C].off("set", compareFunctionListener);
+        };
+
+        return result;
     }
 }

@@ -11,7 +11,7 @@ console.log("--- Array test ---");
         const array3 = new Array([]);
 
         const concatArrays = new Array([array2]);
-        const concated = array1.concat(concatArrays);
+        const concated = array1.Concat(concatArrays);
         concated[C].onAny(() => {
             console.log(concated[O]);
         });
@@ -44,7 +44,7 @@ console.log("--- Array test ---");
     console.log("- every -");
     {
         const array = new Array([6,7,9,4,7,6,8]);
-        const everyResult = array.every(new Function(value => {
+        const everyResult = array.Every(new Function(value => {
             console.log("CHECK " + value);
             return value > 5;
         }));
@@ -60,7 +60,7 @@ console.log("--- Array test ---");
     console.log("- filter -");
     {
         const array = new Array([1,7,9,4,7,3,8]);
-        const filtered = array.filter(new Function(value => {
+        const filtered = array.Filter(new Function(value => {
             console.log("CHECK " + value);
             return value > 5;
         }));
@@ -80,11 +80,11 @@ console.log("--- Array test ---");
     console.log("- findIndex (find) -");
     {
         const array = new Array([1,7,9,4,7,3,8]);
-        const found = array.findIndex(new Function(value => {
+        const found = array.FindIndex(new Function(value => {
             console.log("CHECK " + value);
             return value > 5;
         }));
-        const foundElement = array.find(new Function(value => {
+        const foundElement = array.Find(new Function(value => {
             return value > 5;
         }));
         found[C].on("set", (index) => {
@@ -106,7 +106,7 @@ console.log("--- Array test ---");
         const array = new Array([1,7,9,4,7,3,8]);
         const begin = new Number(1);
         const end = new Number(5);
-        const sliced = array.slice(begin, end);
+        const sliced = array.Slice(begin, end);
         sliced[C].on("splice", (start, deleted, inserted) => {
             console.log("splice!! ", start, deleted, inserted);
             console.log("Sliced : ", sliced[O]);
@@ -125,7 +125,7 @@ console.log("--- Array test ---");
         const array = new Array([1,3,9,4,7,3,8]);
         const valueToFind = new Number(3);
         const fromIndex = new Number(3);
-        const includes = array.includes(valueToFind, fromIndex);
+        const includes = array.Includes(valueToFind, fromIndex);
         includes[C].on("set", (value) => {
             console.log("Includes : ", value);
         });
@@ -142,7 +142,7 @@ console.log("--- Array test ---");
         const array = new Array([1,3,9,4,7,3,8]);
         const valueToFind = new Number(3);
         const fromIndex = new Number(3);
-        const includes = array.indexOf(valueToFind, fromIndex);
+        const includes = array.IndexOf(valueToFind, fromIndex);
         includes[C].on("set", (value) => {
             console.log("Index : ", value);
         });
@@ -157,7 +157,7 @@ console.log("--- Array test ---");
     console.log("- map -");
     {
         const array = new Array([1,3,9,4,7,3,8]);
-        const mapped = array.map(new Function(value => {
+        const mapped = array.Map(new Function(value => {
             return value * 2;
         }));
         mapped[C].on("splice", (start, deleted, inserted) => {
@@ -173,7 +173,7 @@ console.log("--- Array test ---");
     {
         const array = new Array([1,3,9,4,7,3,8]);
         const initialValue = new Number(0);
-        const sum = array.reduce(new Function((sum, value) => {
+        const sum = array.Reduce(new Function((sum, value) => {
             console.log("REDUCE COMPUTE! ", sum, value);
             return sum + value;
         }), initialValue);
@@ -185,5 +185,18 @@ console.log("--- Array test ---");
         array.push(11);
         initialValue.set(3);
         array.splice(0);
+    }
+
+    // sort
+    console.log("- sort -");
+    {
+        const array = new Array(["hey","hello","jam","tasty"]);
+        const sorted = array.Sort();
+        sorted[C].on("splice", (start, deleted, inserted) => {
+            console.log("splice!! ", start, deleted, inserted);
+            console.log("Sorted : ", sorted[O]);
+        });
+        array.push("ha");
+        array.splice(1,2,"apple");
     }
 })();
