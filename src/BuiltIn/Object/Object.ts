@@ -96,10 +96,8 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
 
         obj[C].addListeners(objListeners);
 
-        const prevS = result[S];
         result[S] = () => {
             obj[C].removeListeners(objListeners);
-            prevS();
         };
 
         return result;

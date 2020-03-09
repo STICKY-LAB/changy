@@ -97,6 +97,10 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
 
         this[C].on("splice", listener);
 
+        this[S] = () => {
+            result[S]();
+        };
+
         return result;
     })()
 
@@ -191,6 +195,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             arrays[C].off("splice", arraysListener);
             arrayListenerRemovers.forEach(remove => remove());
         });
+
         return result;
     }
     ImpureEvery(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
@@ -215,7 +220,6 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             callback[C].off("set", callbackListener);
             thisArg[C].on("set", thisArgListener);
         };
-    
         return result;
     }
     Every(callback : Function<PureElementCallback<T, boolean>>) {
