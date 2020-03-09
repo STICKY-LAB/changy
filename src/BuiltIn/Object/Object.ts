@@ -178,7 +178,7 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
 
         return result;
     }
-    static FromEntries<T>(entries : Array<[PropertyKey, T[keyof T]]>) {
+    static FromEntries<T>(entries : Array<[PropertyKey, any]>) {
         const result : Object_<T> = <any> new Object_(OriginalObject.fromEntries(entries[O]));
 
         const entriesListener = (start : number, deleted : [PropertyKey, T[keyof T]][], inserted : [PropertyKey, T[keyof T]][]) => {
