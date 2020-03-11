@@ -23,8 +23,8 @@ export interface ObjectChangeEventEmitter<T extends OriginalObject> extends Chan
 export default class Object_<T extends OriginalObject> extends Changeable<T> {
     readonly [C]: ObjectChangeEventEmitter<T>
     readonly [O]: T
-    Get<K extends keyof T>(name : Primitive<T[K]>) {
-        const result = new Primitive((<any>this[O])[name[O]]);
+    Get<K extends keyof T>(name : Primitive<K>) {
+        const result = new Primitive(this[O][name[O]]);
 
         const listener = () => {
             result.set((<any>this[O])[name[O]]);
