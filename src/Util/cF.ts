@@ -10,7 +10,7 @@ type ArrayKeys<Arr extends Array<any>> = Remove<
 >;
 //Args types can make some errors.
 
-export default function primitiveFunction
+export default function cF
 <OriginalArgs extends Array<any>, Args extends ({[K in ArrayKeys<OriginalArgs>]: Changeable<OriginalArgs[K]>} & Array<Changeable<OriginalArgs[number]>>), R, P extends Primitive<R>>
 (callback : (...targetOriginalObjects : OriginalArgs) => R, primitiveClass : (new (value : R) => P) = <any>Primitive)
 :
