@@ -510,7 +510,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         };
         return result;
     }
-    Join(separator : String = new String("")) { //efficiency not good. I think we need "ArrayString" class.
+    Join(separator : String<any> = new String("")) { //efficiency not good. I think we need "ArrayString" class.
         const result = new String(this[O].join(separator[O]));
 
         const listener = () => {

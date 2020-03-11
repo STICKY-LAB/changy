@@ -57,7 +57,7 @@ export default class Number extends Primitive<number> {
         };
         return result;
     }
-    toLocaleString(locales : String = <any> new Primitive(undefined), options : Object<NumberFormatOptions> = <any> new Object(undefined)) {
+    toLocaleString(locales : String<any> = <any> new Primitive(undefined), options : Object<NumberFormatOptions> = <any> new Object(undefined)) {
         const result = new String(this[O].toLocaleString(locales[O], options[O]));
         
         const listener = (value : number) => {
@@ -197,7 +197,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    static parseFloat(string : String) {
+    static parseFloat(string : String<any>) {
         const result = new Number(OriginalNumber.parseFloat(string[O]));
     
         const listener = (value : string) => {
@@ -212,7 +212,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    static parseInt(string : String) {
+    static parseInt(string : String<any>) {
         const result = new Number(OriginalNumber.parseInt(string[O]));
     
         const listener = (value : string) => {
