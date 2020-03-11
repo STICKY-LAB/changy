@@ -1,9 +1,23 @@
 import Changeable, { O, C, S } from "../Changeable/Changeable";
-import Primitive, { NormalPrimitive } from "../BuiltIn/Primitive/Primitive";
+import Primitive from "../BuiltIn/Primitive/Primitive";
 
-export default function primitiveFunction<OriginalArgs extends Array<Object>, Args extends Array<Changeable<OriginalArgs[number]>>, R>(callback : (...targetOriginalObjects : OriginalArgs) => R) : (...args : Args) => Primitive<R> {
-    return (...args : Args) => {
-        const result = new Primitive(callback(...<any>args.map(arg => arg[O])));
+type Remove<A, B> = A extends B ? never : A;
+type ArrayKeys<Arr extends Array<any>> = Remove<
+    keyof Arr,
+    number | "length" | "toString" | "toLocaleString" | "pop" | "push" | "concat" | "join" | "reverse" | "shift" | "slice"
+    | "sort" | "splice" | "unshift" | "indexOf" | "lastIndexOf" | "every" | "some" | "forEach" | "map" | "filter" | "reduce"
+    | "reduceRight" | "find" | "findIndex" | "fill" | "copyWithin" | "entries" | "keys" | "values" | "includes" | "flatMap" | "flat"
+>;
+//Args types can make some errors.
+
+export default function primitiveFunction
+<OriginalArgs extends Array<any>, Args extends ({[K in ArrayKeys<OriginalArgs>]: Changeable<OriginalArgs[K]>} & Array<Changeable<OriginalArgs[number]>>), R, P extends Primitive<R>>
+(callback : (...targetOriginalObjects : OriginalArgs) => R, primitiveClass : (new (value : R) => P) = <any>Primitive)
+:
+(...args : Args) => (P)
+{
+    return <any>((...args : Args) => {
+        const result = new primitiveClass(callback(...<any>args.map(arg => arg[O])));
     
         const listener = () => {
             result.set(callback(...<any>args.map(arg => arg[O])));
@@ -20,5 +34,20 @@ export default function primitiveFunction<OriginalArgs extends Array<Object>, Ar
         };
     
         return result;
-    };
+    });
 };
+
+/*
+class A<T> {
+    value: T;
+    constructor(value : T) {
+        this.value = value;
+    }
+}
+
+class B extends A<number> {}
+
+function createClassExtendsA<T>(aClass : {new<T>(value:T):A<T>}, value : T) {
+    return new aClass(value);
+}
+*/

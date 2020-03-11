@@ -7,6 +7,7 @@ import Number from "./BuiltIn/Primitive/Number";
 import Boolean from "./BuiltIn/Primitive/Boolean";
 import Function from "./BuiltIn/Primitive/Function";
 import String from "./BuiltIn/Primitive/String";
+import primitiveFunction from "./Util/primitiveFunction";
 
 export {
     Changeable,
@@ -24,6 +25,8 @@ export {
     Number,
     Primitive,
     String,
+
+    primitiveFunction
 };
 
 /**

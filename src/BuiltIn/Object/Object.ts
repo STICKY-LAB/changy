@@ -23,13 +23,13 @@ export interface ObjectChangeEventEmitter<T extends OriginalObject> extends Chan
 export default class Object_<T extends OriginalObject> extends Changeable<T> {
     readonly [C]: ObjectChangeEventEmitter<T>
     readonly [O]: T
-    Get(name : Primitive<PropertyKey>) {
-        const result = new Primitive((<any>this[O])[name[O].value]);
+    Get<K extends keyof T>(name : Primitive<K>) {
+        const result = new Primitive((<any>this[O])[name[O]]);
 
         const listener = () => {
-            result.set((<any>this[O])[name[O].value]);
+            result.set((<any>this[O])[name[O]]);
         };
-        const nameListener = (name : PropertyKey) => {
+        const nameListener = (name : K) => {
             result.set((<any>this[O])[name]);
         };
 
@@ -43,14 +43,14 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
 
         return result;
     }
-    set(name : PropertyKey, value : T[keyof T]) {
+    set<K extends keyof T>(name : K, value : T[K]) {
         const beforeValue = (<any>this[O])[name];
         const beforeSetted = OriginalObject.prototype.hasOwnProperty.call(this[O], name);
         const result = ((<any>(this[O]))[name] = value);
-        this[C].emit("set", name, value, beforeValue, beforeSetted);
+        if(beforeValue != value) this[C].emit("set", name, value, beforeValue, beforeSetted);
         return result;
     }
-    unset(name : PropertyKey) {
+    unset<K extends keyof T>(name : K) {
         const deleted = (<any>this[O])[name];
         const beforeSetted = OriginalObject.prototype.hasOwnProperty.call(this[O], name);
         const result = delete ((<any>this[O])[name]);
@@ -61,7 +61,7 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
         }
         return result;
     }
-    delete(name : PropertyKey) {
+    delete<K extends keyof T>(name : K) {
         return this.unset(name);
     }
 
@@ -176,10 +176,10 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
 
         return result;
     }
-    static FromEntries<T>(entries : Array<[PropertyKey, any]>) {
+    static FromEntries<T>(entries : Array<[keyof T, T[keyof T]]>) {
         const result : Object_<T> = <any> new Object_(OriginalObject.fromEntries(entries[O]));
 
-        const entriesListener = (start : number, deleted : [PropertyKey, T[keyof T]][], inserted : [PropertyKey, T[keyof T]][]) => {
+        const entriesListener = (start : number, deleted : [keyof T, T[keyof T]][], inserted : [keyof T, T[keyof T]][]) => {
             deleted.forEach(deletedEntry => {
                 result.unset(deletedEntry[0]);
             });
@@ -192,6 +192,48 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
 
         result[S] = () => {
             entries[C].off("splice", entriesListener);
+        };
+
+        return result;
+    }
+
+    static FromChangeable<T>(obj : Object_<{[K in keyof T]: Changeable<T[K]>}>) {
+        const result = new Object_<T>(OriginalObject.fromEntries(OriginalObject.entries(obj).map(([name, value]) => [name, value[O]])));
+
+        const valueListenerRemovers : {[name : string]: () => void} = {};
+        const addValueListener = (name : keyof T, value : Changeable<T[keyof T]>) => {
+            const listener = () => {
+                if(value[O] !== (<any>result[O])[name]) {
+                    result.set(name, value[O]);
+                }
+            };
+            value[C].onAny(listener);
+            (<any>valueListenerRemovers)[name] = () => {
+                value[C].offAny(listener);
+                delete (<any>valueListenerRemovers)[name];
+            };
+        };
+        OriginalObject.entries(obj[O]).forEach(([name, value] : [string, Changeable<T[keyof T]>]) => {
+            addValueListener(<any>name, value);
+        });
+
+        const objListeners = {
+            set(name : keyof T, value : Changeable<T[keyof T]>) {
+                if((<any>valueListenerRemovers)[name]) (<any>valueListenerRemovers)[name]();
+                addValueListener(name, value);
+                result.set(name, value[O]);
+            },
+            unset(name : keyof T) {
+                (<any>valueListenerRemovers)[name]();
+                result.unset(name);
+            }
+        };
+
+        obj[C].addListeners(objListeners);
+
+        result[S] = () => {
+            OriginalObject.values(valueListenerRemovers).forEach(remove => remove());
+            obj[C].removeListeners(objListeners);
         };
 
         return result;

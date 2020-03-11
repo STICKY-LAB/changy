@@ -1,4 +1,4 @@
-import Primitive, { NormalPrimitive } from "./Primitive";
+import Primitive from "./Primitive";
 import { O, C, S } from "../../Changeable/Changeable";
 import String from "./String";
 import Object from "../Object/Object";
@@ -20,13 +20,13 @@ interface NumberFormatOptions {
 
 export default class Number extends Primitive<number> {
     toExponential(fractionDigits : Number = <any> new Primitive(undefined)) {
-        const result = new String(this[O].value.toExponential(fractionDigits[O].value));
+        const result = new String(this[O].toExponential(fractionDigits[O]));
     
         const listener = (value : number) => {
-            result.set(value.toExponential(fractionDigits[O].value));
+            result.set(value.toExponential(fractionDigits[O]));
         };
         const fractionDigitsListener = (value : number) => {
-            result.set(this[O].value.toExponential(value));
+            result.set(this[O].toExponential(value));
         };
     
         this[C].on("set", listener);
@@ -39,13 +39,13 @@ export default class Number extends Primitive<number> {
         return result;
     }
     toFixed(digits : Number = new Number(0)) {
-        const result = new String(this[O].value.toFixed(digits[O].value));
+        const result = new String(this[O].toFixed(digits[O]));
         
         const listener = (value : number) => {
-            result.set(value.toFixed(digits[O].value));
+            result.set(value.toFixed(digits[O]));
         };
         const digitsListener = (value : number) => {
-            result.set(this[O].value.toFixed(value));
+            result.set(this[O].toFixed(value));
         };
     
         this[C].on("set", listener);
@@ -58,16 +58,16 @@ export default class Number extends Primitive<number> {
         return result;
     }
     toLocaleString(locales : String = <any> new Primitive(undefined), options : Object<NumberFormatOptions> = <any> new Object(undefined)) {
-        const result = new String(this[O].value.toLocaleString(locales[O].value, options[O]));
+        const result = new String(this[O].toLocaleString(locales[O], options[O]));
         
         const listener = (value : number) => {
-            result.set(value.toLocaleString(locales[O].value, options[O]));
+            result.set(value.toLocaleString(locales[O], options[O]));
         };
         const localesListener = (value : string) => {
-            result.set(this[O].value.toLocaleString(value, options[O]));
+            result.set(this[O].toLocaleString(value, options[O]));
         };
         const optionsListener = () => {
-            result.set(this[O].value.toLocaleString(locales[O].value, options[O]))
+            result.set(this[O].toLocaleString(locales[O], options[O]))
         };
     
         this[C].on("set", listener);
@@ -82,13 +82,13 @@ export default class Number extends Primitive<number> {
         return result;
     }
     toPrecision(precision : Number = <any> new Primitive(undefined)) {
-        const result = new String(this[O].value.toPrecision(precision[O].value));
+        const result = new String(this[O].toPrecision(precision[O]));
         
         const listener = (value : number) => {
-            result.set(value.toPrecision(precision[O].value));
+            result.set(value.toPrecision(precision[O]));
         };
         const precisionListener = (value : number) => {
-            result.set(this[O].value.toPrecision(value));
+            result.set(this[O].toPrecision(value));
         };
     
         this[C].on("set", listener);
@@ -102,13 +102,13 @@ export default class Number extends Primitive<number> {
         return result;
     }
     toString(radix : Number = <any> new Primitive(undefined)) {
-        const result = new String(this[O].value.toString(radix[O].value));
+        const result = new String(this[O].toString(radix[O]));
         
         const listener = (value : number) => {
-            result.set(value.toString(radix[O].value));
+            result.set(value.toString(radix[O]));
         };
         const radixListener = (value : number) => {
-            result.set(this[O].value.toString(value));
+            result.set(this[O].toString(value));
         };
     
         this[C].on("set", listener);
@@ -122,7 +122,7 @@ export default class Number extends Primitive<number> {
         return result;
     }
     valueOf() {
-        const result = new Number(this[O].value);
+        const result = new Number(this[O]);
         
         const listener = (value : number) => {
             result.set(value);
@@ -138,7 +138,7 @@ export default class Number extends Primitive<number> {
     }
 
     static isFinite(value : Number) {
-        const result = new Boolean(OriginalNumber.isFinite(value[O].value));
+        const result = new Boolean(OriginalNumber.isFinite(value[O]));
     
         const listener = (value : number) => {
             result.set(OriginalNumber.isFinite(value));
@@ -153,7 +153,7 @@ export default class Number extends Primitive<number> {
         return result;
     }
     static isInteger(value : Number) {
-        const result = new Boolean(OriginalNumber.isInteger(value[O].value));
+        const result = new Boolean(OriginalNumber.isInteger(value[O]));
     
         const listener = (value : number) => {
             result.set(OriginalNumber.isInteger(value));
@@ -168,7 +168,7 @@ export default class Number extends Primitive<number> {
         return result;
     }
     static isNaN(value : Number) {
-        const result = new Boolean(OriginalNumber.isNaN(value[O].value));
+        const result = new Boolean(OriginalNumber.isNaN(value[O]));
     
         const listener = (value : number) => {
             result.set(OriginalNumber.isNaN(value));
@@ -183,7 +183,7 @@ export default class Number extends Primitive<number> {
         return result;
     }
     static isSafeInteger(value : Number) {
-        const result = new Boolean(OriginalNumber.isSafeInteger(value[O].value));
+        const result = new Boolean(OriginalNumber.isSafeInteger(value[O]));
     
         const listener = (value : number) => {
             result.set(OriginalNumber.isSafeInteger(value));
@@ -198,7 +198,7 @@ export default class Number extends Primitive<number> {
         return result;
     }
     static parseFloat(string : String) {
-        const result = new Number(OriginalNumber.parseFloat(string[O].value));
+        const result = new Number(OriginalNumber.parseFloat(string[O]));
     
         const listener = (value : string) => {
             result.set(OriginalNumber.parseFloat(value));
@@ -213,7 +213,7 @@ export default class Number extends Primitive<number> {
         return result;
     }
     static parseInt(string : String) {
-        const result = new Number(OriginalNumber.parseInt(string[O].value));
+        const result = new Number(OriginalNumber.parseInt(string[O]));
     
         const listener = (value : string) => {
             result.set(OriginalNumber.parseInt(value));

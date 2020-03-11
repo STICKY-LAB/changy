@@ -9,7 +9,7 @@ export default class String extends Primitive<string> {
 
 
     static fromCharCode(nums : Array<Number>) {
-        const result = new String(OriginalString.fromCharCode(...nums[O].map(number => number[O].value)));
+        const result = new String(OriginalString.fromCharCode(...nums[O].map(number => number[O])));
 
         return result;
     }

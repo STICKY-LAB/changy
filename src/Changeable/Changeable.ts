@@ -25,14 +25,18 @@ const Ss = Symbol("StopChangeCallbacks");
  * 심각하게 중요한 부분은 아닙니다.
  */
 
-export default abstract class Changeable<T extends Object> {
+ /**
+  * 
+  */
+
+export default abstract class Changeable<T> {
     readonly [C] = new ChangeEventEmitter
     readonly [Ss] : (() => void)[] = [() => {
         //remove all listeners
         this[C].removeAllListeners(/^/);
         this[C].anyListeners.forEach(anyListener => this[C].offAny(anyListener));
     }];
-    readonly abstract [O]:T;
+    abstract [O]:T;
     constructor(originalObject : T) {
         this[O] = originalObject;
     }

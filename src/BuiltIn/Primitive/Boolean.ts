@@ -4,7 +4,7 @@ import String from "./String";
 
 export default class Boolean extends Primitive<boolean> {
     toString() {
-        const result = new String(this[O].value.toString());
+        const result = new String(this[O].toString());
     
         const listener = (value : boolean) => {
             result.set(value.toString());
@@ -19,7 +19,7 @@ export default class Boolean extends Primitive<boolean> {
         return result;
     }
     valueOf(this : Boolean) {
-        const result = new Boolean(this[O].value);
+        const result = new Boolean(this[O]);
     
         const listener = (value : boolean) => {
             result.set(value);

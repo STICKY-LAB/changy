@@ -7,7 +7,7 @@ console.log("--- Function test ---");
     console.log("- call -")
     {
         const f = new Function(function (...args) {
-            return this + args.reduce((sum, arg) => (sum + arg.value), 0);
+            return this + args.reduce((sum, arg) => (sum + arg), 0);
         });
 
         const a = new Number(1);
@@ -55,7 +55,7 @@ console.log("--- Function test ---");
     console.log("- bind -");
     {
         const f = new Function(function (...args) {
-            return this + args.reduce((sum, arg) => (sum + arg.value), 0);
+            return this + args.reduce((sum, arg) => (sum + arg), 0);
         });
 
         const a = new Number(0);

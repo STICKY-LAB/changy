@@ -1,0 +1,11 @@
+import Changeable, { O, C, S } from "../Changeable/Changeable";
+import Boolean from "../BuiltIn/Primitive/Boolean";
+import primitiveFunction from "./primitiveFunction";
+
+export default function equals(a : Changeable<any>, b : Changeable<any>) {
+    const result = primitiveFunction((a : number, b : number) => {
+        return a === b;
+    }, Boolean)(a, b);
+
+    return result;
+}

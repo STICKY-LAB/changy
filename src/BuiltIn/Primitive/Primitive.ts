@@ -1,15 +1,6 @@
-import Changeable, { O, C } from "../../Changeable/Changeable";
+import Changeable, { O, C, S } from "../../Changeable/Changeable";
 import ChangeEventEmitter from "../../Changeable/ChangeEventEmitter";
-
-export class NormalPrimitive<T> {
-    value: T;
-    constructor(value : T) {
-        this.value = value;
-    }
-    set(value : T) {
-        this.value = value;
-    }
-}
+import Boolean from "./Boolean";
 
 export interface PrimitiveChangeEventEmitter<T> extends ChangeEventEmitter {
     on(event : "set", listener : (value : T, prevValue : T) => void) : this
@@ -21,16 +12,16 @@ export interface PrimitiveChangeEventEmitter<T> extends ChangeEventEmitter {
     emit(event : RegExp, ...args : any): this
 }
 
-class Primitive<T> extends Changeable<NormalPrimitive<T>> {
+class Primitive<T> extends Changeable<T> {
     readonly [C]: PrimitiveChangeEventEmitter<T>
-    readonly [O]: NormalPrimitive<T>
+    [O]: T
     constructor(value : T) {
-        super(new NormalPrimitive(value));
+        super(value);
     }
     set(value : T) {
-        const prevValue = this[O].value;
+        const prevValue = this[O];
         if(value === prevValue) return;
-        this[O].set(value);
+        this[O] = value;
         this[C].emit("set", value, prevValue);
     }
 }
