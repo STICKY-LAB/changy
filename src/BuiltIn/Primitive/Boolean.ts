@@ -3,7 +3,7 @@ import { O, C, S } from "../../Changeable/Changeable";
 import String from "./String";
 
 export default class Boolean extends Primitive<boolean> {
-    toString() {
+    ToString() {
         const result = new String(this[O].toString());
     
         const listener = (value : boolean) => {
@@ -18,7 +18,7 @@ export default class Boolean extends Primitive<boolean> {
     
         return result;
     }
-    valueOf(this : Boolean) {
+    ValueOf(this : Boolean) {
         const result = new Boolean(this[O]);
     
         const listener = (value : boolean) => {

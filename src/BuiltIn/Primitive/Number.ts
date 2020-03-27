@@ -19,7 +19,7 @@ interface NumberFormatOptions {
 }
 
 export default class Number extends Primitive<number> {
-    toExponential(fractionDigits : Number = <any> new Primitive(undefined)) {
+    ToExponential(fractionDigits : Number = <any> new Primitive(undefined)) {
         const result = new String(this[O].toExponential(fractionDigits[O]));
     
         const listener = (value : number) => {
@@ -38,7 +38,7 @@ export default class Number extends Primitive<number> {
         };
         return result;
     }
-    toFixed(digits : Number = new Number(0)) {
+    ToFixed(digits : Number = new Number(0)) {
         const result = new String(this[O].toFixed(digits[O]));
         
         const listener = (value : number) => {
@@ -57,7 +57,7 @@ export default class Number extends Primitive<number> {
         };
         return result;
     }
-    toLocaleString(locales : String<any> = <any> new Primitive(undefined), options : Object<NumberFormatOptions> = <any> new Object(undefined)) {
+    ToLocaleString(locales : String<any> = <any> new Primitive(undefined), options : Object<NumberFormatOptions> = <any> new Object(undefined)) {
         const result = new String(this[O].toLocaleString(locales[O], options[O]));
         
         const listener = (value : number) => {
@@ -81,7 +81,7 @@ export default class Number extends Primitive<number> {
         };
         return result;
     }
-    toPrecision(precision : Number = <any> new Primitive(undefined)) {
+    ToPrecision(precision : Number = <any> new Primitive(undefined)) {
         const result = new String(this[O].toPrecision(precision[O]));
         
         const listener = (value : number) => {
@@ -101,7 +101,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    toString(radix : Number = <any> new Primitive(undefined)) {
+    ToString(radix : Number = <any> new Primitive(undefined)) {
         const result = new String(this[O].toString(radix[O]));
         
         const listener = (value : number) => {
@@ -121,7 +121,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    valueOf() {
+    ValueOf() {
         const result = new Number(this[O]);
         
         const listener = (value : number) => {
@@ -137,7 +137,7 @@ export default class Number extends Primitive<number> {
         return result;
     }
 
-    static isFinite(value : Number) {
+    static IsFinite(value : Number) {
         const result = new Boolean(OriginalNumber.isFinite(value[O]));
     
         const listener = (value : number) => {
@@ -152,7 +152,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    static isInteger(value : Number) {
+    static IsInteger(value : Number) {
         const result = new Boolean(OriginalNumber.isInteger(value[O]));
     
         const listener = (value : number) => {
@@ -167,7 +167,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    static isNaN(value : Number) {
+    static IsNaN(value : Number) {
         const result = new Boolean(OriginalNumber.isNaN(value[O]));
     
         const listener = (value : number) => {
@@ -182,7 +182,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    static isSafeInteger(value : Number) {
+    static IsSafeInteger(value : Number) {
         const result = new Boolean(OriginalNumber.isSafeInteger(value[O]));
     
         const listener = (value : number) => {
@@ -197,7 +197,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    static parseFloat(string : String<any>) {
+    static ParseFloat(string : String<any>) {
         const result = new Number(OriginalNumber.parseFloat(string[O]));
     
         const listener = (value : string) => {
@@ -212,7 +212,7 @@ export default class Number extends Primitive<number> {
     
         return result;
     }
-    static parseInt(string : String<any>) {
+    static ParseInt(string : String<any>) {
         const result = new Number(OriginalNumber.parseInt(string[O]));
     
         const listener = (value : string) => {

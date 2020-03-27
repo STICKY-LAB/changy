@@ -723,7 +723,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
 
         return result;
     }
-
+    
     static FromChangeable<T>(array : Array<Changeable<T>>) {
         const result = new Array(array[O].map(item => item[O]));
 

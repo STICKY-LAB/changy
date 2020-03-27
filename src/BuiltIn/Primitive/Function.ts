@@ -33,7 +33,7 @@ export default class Function<T extends OriginalFunction> extends Primitive<T> {
         return result;
     })()
     
-    apply(thisArg : Primitive<any>, argsArray : Array<any> = new Array([])) {
+    Apply(thisArg : Primitive<any>, argsArray : Array<any> = new Array([])) {
         const result = new Primitive(this[O].apply(thisArg[O], argsArray[O]));
     
         const listener = (f : OriginalFunction) => {
@@ -58,7 +58,7 @@ export default class Function<T extends OriginalFunction> extends Primitive<T> {
     
         return result;
     }
-    bind(thisArg : Primitive<any>, argsArray : Array<Changeable<any>> = new Array([])) {
+    Bind(thisArg : Primitive<any>, argsArray : Array<Changeable<any>> = new Array([])) {
         const result = new Function(this[O].bind(thisArg[O], ...argsArray[O].map(arg => arg[O])));
     
         const listenArg = (arg : Changeable<any>) => {
@@ -98,7 +98,7 @@ export default class Function<T extends OriginalFunction> extends Primitive<T> {
     
         return result;
     }
-    call<T extends OriginalFunction>(this : Function<T>, thisArg : Primitive<any> = new Primitive(undefined), argsArray : Array<Changeable<any>> = new Array([])) {
+    Call<T extends OriginalFunction>(this : Function<T>, thisArg : Primitive<any> = new Primitive(undefined), argsArray : Array<Changeable<any>> = new Array([])) {
         const result = new Primitive(this[O].call(thisArg[O], ...argsArray[O].map(arg => arg[O])));
     
         const listenArg = (arg : Changeable<any>) => {
@@ -138,7 +138,7 @@ export default class Function<T extends OriginalFunction> extends Primitive<T> {
     
         return result;
     }
-    toString<T extends OriginalFunction>(this : Function<T>) {
+    ToString<T extends OriginalFunction>(this : Function<T>) {
         const result = new String(this[O].toString());
     
         const listener = (f : OriginalFunction) => {
