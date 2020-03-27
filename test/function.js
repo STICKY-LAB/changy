@@ -15,7 +15,7 @@ console.log("--- Function test ---");
         const c = new Number(6);
 
         const args = new Array([b, c]);
-        const sum = f.call(a, args);
+        const sum = f.Call(a, args);
 
         sum[C].on("set", value => {
             console.log(`sum : ${value}`);
@@ -40,7 +40,7 @@ console.log("--- Function test ---");
         const c = 6;
 
         const args = new Array([b, c]);
-        const sum = f.apply(a, args);
+        const sum = f.Apply(a, args);
 
         sum[C].on("set", value => {
             console.log(`sum : ${value}`);
@@ -63,10 +63,10 @@ console.log("--- Function test ---");
         const c = new Number(3);
 
         const bindArgs = new Array([]);
-        const bindedF = f.bind(a, bindArgs);
+        const bindedF = f.Bind(a, bindArgs);
 
         const args = new Array([]);
-        const sum = bindedF.call(new Primitive(null), args);
+        const sum = bindedF.Call(new Primitive(null), args);
 
         sum[C].on("set", value => {
             console.log(`sum : ${value}`);
@@ -85,7 +85,7 @@ console.log("--- Function test ---");
             return args.reduce((sum, arg) => (sum + arg), 0);
         });
 
-        const fToString = f.toString();
+        const fToString = f.ToString();
         fToString[C].on("set", value => {
             console.log(`f to string : ${value}`);
         });

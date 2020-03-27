@@ -8,13 +8,13 @@ console.log("--- Number test ---");
     };
     num[C].on("set", numChangeListener);
 
-    const exponential = num.toExponential();
+    const exponential = num.ToExponential();
     exponential[C].on("set", value => {
         console.log(`changed exponential : ${value}`);
     });
 
     const digit = new Number(0);
-    const fixed = num.toFixed(digit);
+    const fixed = num.ToFixed(digit);
     fixed[C].on("set", value => {
         console.log(`changed fixed : ${value}`);
     });
@@ -30,7 +30,7 @@ console.log("--- Number test ---");
     console.log("exponential, fixed, num change listners stopped.");
 
     const radix = new Number(10);
-    const string = num.toString(radix);
+    const string = num.ToString(radix);
     string[C].on("set", value => {
         console.log(`string fixed : ${value}`)
     });

@@ -10,6 +10,7 @@ you can make your own reactive class / function.
 ```js
 const { Array, Number, Function, O, C } = require("changy");
 
+console.log("--- Array test ---");
 (() => {
 
     // concat, push / set, splice
@@ -214,6 +215,7 @@ const { Array, Number, Function, O, C } = require("changy");
 ```js
 const { Number, Array, Function, Primitive, C, S } = require("changy");
 
+console.log("--- Function test ---");
 (() => {
 
     // call
@@ -228,7 +230,7 @@ const { Number, Array, Function, Primitive, C, S } = require("changy");
         const c = new Number(6);
 
         const args = new Array([b, c]);
-        const sum = f.call(a, args);
+        const sum = f.Call(a, args);
 
         sum[C].on("set", value => {
             console.log(`sum : ${value}`);
@@ -253,7 +255,7 @@ const { Number, Array, Function, Primitive, C, S } = require("changy");
         const c = 6;
 
         const args = new Array([b, c]);
-        const sum = f.apply(a, args);
+        const sum = f.Apply(a, args);
 
         sum[C].on("set", value => {
             console.log(`sum : ${value}`);
@@ -276,10 +278,10 @@ const { Number, Array, Function, Primitive, C, S } = require("changy");
         const c = new Number(3);
 
         const bindArgs = new Array([]);
-        const bindedF = f.bind(a, bindArgs);
+        const bindedF = f.Bind(a, bindArgs);
 
         const args = new Array([]);
-        const sum = bindedF.call(new Primitive(null), args);
+        const sum = bindedF.Call(new Primitive(null), args);
 
         sum[C].on("set", value => {
             console.log(`sum : ${value}`);
@@ -298,7 +300,7 @@ const { Number, Array, Function, Primitive, C, S } = require("changy");
             return args.reduce((sum, arg) => (sum + arg), 0);
         });
 
-        const fToString = f.toString();
+        const fToString = f.ToString();
         fToString[C].on("set", value => {
             console.log(`f to string : ${value}`);
         });
@@ -335,6 +337,7 @@ const { Number, Array, Function, Primitive, C, S } = require("changy");
 ```js
 const { Number, C, S } = require("changy");
 
+console.log("--- Number test ---");
 (() => {
     const num = new Number(4);
     const numChangeListener = value => {
@@ -342,13 +345,13 @@ const { Number, C, S } = require("changy");
     };
     num[C].on("set", numChangeListener);
 
-    const exponential = num.toExponential();
+    const exponential = num.ToExponential();
     exponential[C].on("set", value => {
         console.log(`changed exponential : ${value}`);
     });
 
     const digit = new Number(0);
-    const fixed = num.toFixed(digit);
+    const fixed = num.ToFixed(digit);
     fixed[C].on("set", value => {
         console.log(`changed fixed : ${value}`);
     });
@@ -364,7 +367,7 @@ const { Number, C, S } = require("changy");
     console.log("exponential, fixed, num change listners stopped.");
 
     const radix = new Number(10);
-    const string = num.toString(radix);
+    const string = num.ToString(radix);
     string[C].on("set", value => {
         console.log(`string fixed : ${value}`)
     });
@@ -378,6 +381,7 @@ const { Number, C, S } = require("changy");
 ```js
 const { Object, O, C, Function } = require("changy");
 
+console.log("--- Object test ---");
 (() => {
     // keys
     console.log("- keys -");
@@ -457,6 +461,7 @@ const { Object, O, C, Function } = require("changy");
 ```js
 const { Primitive, C } = require("changy");
 
+console.log("--- Primitive test ---");
 (() => {
     const a = new Primitive(40);
     a.set(2134);
