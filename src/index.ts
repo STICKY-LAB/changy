@@ -8,6 +8,7 @@ import Boolean from "./BuiltIn/Primitive/Boolean";
 import Function from "./BuiltIn/Primitive/Function";
 import String from "./BuiltIn/Primitive/String";
 import cF from "./Util/cF";
+import iF from "./Util/iF";
 
 export {
     Changeable,
@@ -26,7 +27,8 @@ export {
     Primitive,
     String,
 
-    cF
+    cF,
+    iF
 };
 
 /**
