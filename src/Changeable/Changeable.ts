@@ -31,7 +31,7 @@ const Ss = Symbol("StopChangeCallbacks");
 
 export default abstract class Changeable<T> {
     readonly [C] = new ChangeEventEmitter
-    readonly [Ss] : (() => void)[] = [() => {
+    private readonly [Ss] : (() => void)[] = [() => {
         //remove all listeners
         this[C].removeAllListeners(/^/);
         this[C].anyListeners.forEach(anyListener => this[C].offAny(anyListener));

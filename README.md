@@ -5,6 +5,51 @@ Changy makes built-in objects and other objects reactive.
 Changy supports built-in objects : Array, Object, Boolean, Function, Number, String, Primitive,
 you can make your own reactive class / function.
 
+# Concepts
+
+## Changeable
+Changeable is as literally changeable object.
+Changeable has following properties : \[O\], \[C\], \[S\] (Symbol).
+Changeable class is used to wrap non-changeable class.
+\[O\] property used to have original object.
+\[C\] property is EventEmitter, used to emit / listen object changing event.
+\[S\] method is used to stop Changeable changing, you can use it like to set onStop listener by set the property.
+
+
+```js
+const { Changeable, O, C, S } = require("changy");
+
+class A extends Changeable { //Don't use Changeable class like this! It's just for test.
+    constructor() {
+        super(arguments);
+        this[S] = (() => {
+            console.log("stop A");
+        });
+    }
+}
+class B extends A {
+    constructor() {
+        super(arguments);
+        this[S] = (() => {
+            console.log("stop B");
+        });
+    }
+}
+
+console.log("--- Stop method test ---");
+(() => {
+    const b = new B(undefined);
+    b[S] = (() => {
+        console.log("stop custom");
+    });
+
+    b[S]();
+    log
+    // stop A
+    // stop B
+    // stop custom
+})();
+```
 # Examples
 ## Array
 ```js
