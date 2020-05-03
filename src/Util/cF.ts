@@ -12,15 +12,25 @@ type ArrayKeys<Arr extends Array<any>> = Remove<
 
 export default function cF
 <OriginalArgs extends Array<any>, Args extends ({[K in ArrayKeys<OriginalArgs>]: Changeable<OriginalArgs[K]>} & Array<Changeable<OriginalArgs[number]>>), R, P extends Primitive<R>>
-(callback : (...targetOriginalObjects : OriginalArgs) => R, primitiveClass : (new (value : R) => P) = <any>Primitive)
+(callback : (...targetOriginalObjects : OriginalArgs) => R, primitiveClass : (new (value : R) => P) = <any>Primitive, maybe = false)
 :
 (...args : Args) => (P)
 {
     return <any>((...args : Args) => {
-        const result = new primitiveClass(callback(...<any>args.map(arg => arg[O])));
+        function computeValue() {
+            return (
+                maybe && !(args.map(arg => arg[O]).every(value => !(value === null || value === undefined))) ?
+                    undefined
+                :
+                    callback(...<any>args.map(arg => arg[O]))
+            );
+        }
+        const result = new primitiveClass(computeValue());
     
         const listener = () => {
-            result.set(callback(...<any>args.map(arg => arg[O])));
+            result.set(
+                computeValue()
+            );
         };
 
         args.forEach((arg) => {
