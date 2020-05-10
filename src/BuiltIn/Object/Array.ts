@@ -472,15 +472,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         let beforeFromIndex = fromIndex[O];
 
         const listener = (start : number, deleted : T[], inserted : T[]) => {
-            if(result[O] === -1) {
-                result.set(inserted.indexOf(searchElement[O], fromIndex[O]));
-            } else {
-                if(deleted.includes(searchElement[O])) {
-                    if(!inserted.includes(searchElement[O])) {
-                        result.set(this[O].indexOf(searchElement[O], fromIndex[O]));
-                    }
-                }
-            }
+            result.set(this[O].indexOf(searchElement[O], fromIndex[O]));
         };
         const searchElementListener = (searchElement : T) => {
             result.set(this[O].indexOf(searchElement, fromIndex[O]));
