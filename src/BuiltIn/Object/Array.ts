@@ -761,4 +761,19 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
 
         return result;
     }
+    static FromLength(length: Number) : Array<null> {
+        const result = new Array(new OriginalArray(length[O]).fill(null));
+
+        const lengthListener = (length : number) => {
+            const lengthToAdd = length - result[O].length;
+            result.splice(result[O].length + lengthToAdd, -lengthToAdd, ...(new OriginalArray(lengthToAdd > 0 ? lengthToAdd : 0).fill(null)));
+        };
+        length[C].on("set", lengthListener);
+
+        result[S] = () => {
+            length[C].off("set", lengthListener);
+        };
+
+        return result;
+    }
 }
