@@ -12,7 +12,7 @@ console.log("--- Array test ---");
 
         const concatArrays = new Array([array2]);
         const concated = array1.Concat(concatArrays);
-        concated[C].onAny(() => {
+        concated[C].on(/^/, () => {
             console.log(concated[O]);
         });
 

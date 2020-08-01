@@ -9,9 +9,9 @@ function fromC<V, T extends Primitive<V>>(changeable : Changeable<T>, primitiveC
         lastInner[C].off("set", innerListener);
         lastInner = changeable[O];
         result.set(lastInner[O]);
-        lastInner[C].on("set", innerListener);
+        lastInner[C].on("set", innerListener, result);
     };
-    changeable[C].onAny(listener);
+    changeable[C].on(/^/, listener, result);
 
     // inner Listener
     const innerListener = () => {
@@ -19,12 +19,7 @@ function fromC<V, T extends Primitive<V>>(changeable : Changeable<T>, primitiveC
     };
     let lastInner = changeable[O];
     result.set(lastInner[O]);
-    lastInner[C].on("set", innerListener);
-
-    result[S] = (() => {
-        changeable[C].offAny(listener);
-        lastInner[C].off("set", innerListener);
-    });
+    lastInner[C].on("set", innerListener, result);
 
     return result;
 }

@@ -1,4 +1,4 @@
-import Changeable, { O, C, S } from "../../Changeable/Changeable";
+import Changeable, { O, C, S, IN } from "../../Changeable/Changeable";
 import OriginalArray from "../Originals/Array";
 import ChangeEventEmitter from "../../Changeable/ChangeEventEmitter";
 import Primitive from "../Primitive/Primitive";
@@ -7,6 +7,7 @@ import Boolean from "../Primitive/Boolean";
 import OriginalFunction from "../Originals/Function";
 import Number from "../Primitive/Number";
 import String from "../Primitive/String";
+import cF from "../../Util/cF";
 
 /**
  * Don't make empty element.
@@ -27,13 +28,8 @@ export function changeableRealIndex(index : Number, length : Number) {
         result.set(index[O] < 0 ? (index[O] < -length ? 0 : length + index[O]) : (index[O] > length ? length : index[O]));
     }
 
-    index[C].on("set", indexListener);
-    length[C].on("set", lengthListener);
-
-    result[S] = () => {
-        index[C].off("set", indexListener);
-        length[C].off("set", lengthListener);
-    };
+    index[C].on("set", indexListener, result);
+    length[C].on("set", lengthListener, result);
 
     return result;
 }
@@ -45,7 +41,7 @@ export type PureReduceCallback<T, R> = (accumulator : R, element : T) => R
 export type CompareCallback<T, R> = (a : T, b : T) => R
 
 export interface ArrayChangeEventEmitter<T> extends ChangeEventEmitter {
-    on(event : "splice", listener : (index : number, deleted : T[], inserted : T[]) => void) : this
+    on(event : "splice", listener : (index : number, deleted : T[], inserted : T[]) => void, output?: Changeable<any>) : this
     on(event: string, listener: OriginalFunction): this
     on(event: RegExp, listener: OriginalFunction): this
 
@@ -57,6 +53,13 @@ export interface ArrayChangeEventEmitter<T> extends ChangeEventEmitter {
 export default class Array<T> extends Changeable<OriginalArray<T>> {
     readonly [C]: ArrayChangeEventEmitter<T>
     readonly [O]: OriginalArray<T>;
+    length = cF(array => array.length, Number)(this)[IN]();
+
+    constructor(original : OriginalArray<T>) {
+        super(original);
+        this[C].defineEvents(["splice"]);
+    }
+
     Get(index : Number) {
         const result = new Primitive<T>(this[O][index[O]]);
         const listener = () => {
@@ -66,13 +69,8 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(this[O][index]);
         };
 
-        this[C].on("splice", listener);
-        index[C].on("set", indexListener);
-
-        result[S] = () => {
-            this[C].off("splice", listener);
-            index[C].off("set", indexListener);
-        };
+        this[C].on("splice", listener, result);
+        index[C].on("set", indexListener, result);
 
         return result;
     }
@@ -87,22 +85,6 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         }
         return result;
     }
-
-    length = (() => {
-        const result = new Number(this[O].length);
-
-        const listener = () => {
-            result.set(this[O].length);
-        };
-
-        this[C].on("splice", listener);
-
-        this[S] = () => {
-            result[S]();
-        };
-
-        return result;
-    })()
 
     copyWithin(target : number, start : number = 0, end : number = this[O].length) {
         const start_ = realIndex(start, this[O].length);
@@ -170,7 +152,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
                 const leftIndex = this[O].length + arrays[O].slice(0, arrays[O].indexOf(array)).reduce((sum, array) => (sum + array[O].length), 0);
                 result.splice(leftIndex + start, deleted.length, ...items);
             });
-            array[C].on("splice", listener);
+            array[C].on("splice", listener, result);
             return () => {
                 array[C].off("splice", listener);
             };
@@ -187,14 +169,8 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         };
 
         arrayListenerRemovers.push(...arrays[O].map(array => listenArray(array)));
-        this[C].on("splice", thisListener);
-        arrays[C].on("splice", arraysListener);
-
-        result[S] = (() => {
-            this[C].off("splice", thisListener);
-            arrays[C].off("splice", arraysListener);
-            arrayListenerRemovers.forEach(remove => remove());
-        });
+        this[C].on("splice", thisListener, result);
+        arrays[C].on("splice", arraysListener, result);
 
         return result;
     }
@@ -211,15 +187,10 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(this[O].every(callback[O], thisArg));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-        thisArg[C].on("set", thisArgListener);
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
+        thisArg[C].on("set", thisArgListener, result);
     
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-            thisArg[C].on("set", thisArgListener);
-        };
         return result;
     }
     Every(callback : Function<PureElementCallback<T, boolean>>) {
@@ -245,13 +216,8 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(callbackResults.every(isPassed => isPassed));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
     
         return result;
     }
@@ -268,15 +234,9 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.splice(0, result[O].length, ...this[O].filter(callback[O], thisArg));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-        thisArg[C].on("set", thisArgListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-            thisArg[C].on("set", thisArgListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
+        thisArg[C].on("set", thisArgListener, result);
     
         return result;
     }
@@ -297,13 +257,8 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.splice(0, result[O].length, ...this[O].filter((element, index) => callbackResults[index]));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
     
         return result;
     }
@@ -320,26 +275,15 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(this[O].find(callback[O], thisArg));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-        thisArg[C].on("set", thisArgListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-            thisArg[C].on("set", thisArgListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
+        thisArg[C].on("set", thisArgListener, result);
     
         return result;
     }
     Find(callback : Function<PureElementCallback<T, boolean>>) {
         const index = this.FindIndex(callback);
         const result = this.Get(index);
-    
-        result[S] = () => {
-            index[S]();
-            result[S]();
-        };
     
         return result;
     }
@@ -356,15 +300,9 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(this[O].findIndex(callback[O], thisArg));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-        thisArg[C].on("set", thisArgListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-            thisArg[C].on("set", thisArgListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
+        thisArg[C].on("set", thisArgListener, result);
     
         return result;
     }
@@ -402,13 +340,8 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(this[O].findIndex((element, index) => callbackResults[index]));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
     
         return result;
     }
@@ -453,16 +386,10 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             beforeFromIndex = fromIndex;
         };
 
-        this[C].on("splice", listener);
-        valueToFind[C].on("set", valueToFindListener);
-        fromIndex[C].on("set", fromIndexListener);
+        this[C].on("splice", listener, result);
+        valueToFind[C].on("set", valueToFindListener, result);
+        fromIndex[C].on("set", fromIndexListener, result);
 
-        result[S] = () => {
-            fromIndex[S]();
-            this[C].off("splice", listener);
-            valueToFind[C].off("set", valueToFindListener);
-            fromIndex[C].off("set", fromIndexListener);
-        };
         return result;
     }
     IndexOf(searchElement : Primitive<T>, fromIndex_ : Number = new Number(0)) {
@@ -490,16 +417,10 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             beforeFromIndex = fromIndex;
         };
 
-        this[C].on("splice", listener);
-        searchElement[C].on("set", searchElementListener);
-        fromIndex[C].on("set", fromIndexListener);
+        this[C].on("splice", listener, result);
+        searchElement[C].on("set", searchElementListener, result);
+        fromIndex[C].on("set", fromIndexListener, result);
 
-        result[S] = () => {
-            fromIndex[S]();
-            this[C].off("splice", listener);
-            searchElement[C].off("set", searchElementListener);
-            fromIndex[C].off("set", fromIndexListener);
-        };
         return result;
     }
     Join(separator : String<any> = new String("")) { //efficiency not good. I think we need "ArrayString" class.
@@ -512,18 +433,13 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(this[O].join(separator));
         };
 
-        this[C].on("splice", listener);
-        separator[C].on("set", separatorListener);
-
-        result[S] = () => {
-            this[C].off("splice", listener);
-            separator[C].off("set", separatorListener);
-        };
+        this[C].on("splice", listener, result);
+        separator[C].on("set", separatorListener, result);
 
         return result;
     }
     //lastIndexOf
-    ImpureMap<R>(callback : Function<ElementCallback<T, R>>, thisArg : Primitive<any> = new Primitive(undefined)) {
+    ImpureMap(callback : Function<ElementCallback<T, boolean>>, thisArg : Primitive<any> = new Primitive(undefined)) {
         const result = new Array(this[O].map(<any>callback[O], thisArg[O]));
     
         const listener = (start : number, deleted : T[], inserted : T[]) => {
@@ -536,15 +452,9 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.splice(0, result[O].length, ...this[O].map(callback[O], thisArg));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-        thisArg[C].on("set", thisArgListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-            thisArg[C].on("set", thisArgListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
+        thisArg[C].on("set", thisArgListener, result);
     
         return result;
     }
@@ -558,13 +468,8 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.splice(0, result[O].length, ...this[O].map(f));
         };
     
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
-    
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-        };
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
     
         return result;
     }
@@ -617,19 +522,11 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.set(this[O].length ? reduceds[reduceds.length - 1] : initialValue);
         };
 
-        this[C].on("splice", listener);
-        callback[C].on("set", callbackListener);
+        this[C].on("splice", listener, result);
+        callback[C].on("set", callbackListener, result);
         if(initialValue) {
-            initialValue[C].on("set", initialValueListener);
+            initialValue[C].on("set", initialValueListener, result);
         }
-
-        result[S] = () => {
-            this[C].off("splice", listener);
-            callback[C].off("set", callbackListener);
-            if(initialValue) {
-                initialValue[C].off("set", initialValueListener);
-            }
-        };
 
         return result;
     }
@@ -671,15 +568,9 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             beforeEnd = end;
         };
 
-        this[C].on("splice", listener);
-        begin[C].on("set", beginListener);
-        end[C].on("set", endListener);
-
-        result[S] = () => {
-            begin[S]();
-            end[S]();
-            this[C].off("splice", listener);
-        };
+        this[C].on("splice", listener, result);
+        begin[C].on("set", beginListener, result);
+        end[C].on("set", endListener, result);
 
         return result;
     }
@@ -705,13 +596,8 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             result.splice(0, result[O].length, ...this[O].sort(compareFunction));
         };
 
-        this[C].on("splice", listener);
-        compareFunction[C].on("set", compareFunctionListener);
-
-        result[S] = () => {
-            this[C].off("splice", listener);
-            compareFunction[C].off("set", compareFunctionListener);
-        };
+        this[C].on("splice", listener, result);
+        compareFunction[C].on("set", compareFunctionListener, result);
 
         return result;
     }
@@ -727,9 +613,9 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
                     result.splice(itemIndex, 1, item[O]);
                 }
             };
-            item[C].onAny(listener);
+            item[C].on(/^/, listener, result);
             itemListenerRemovers.splice(index, 0, () => {
-                item[C].offAny(listener);
+                item[C].off(/^/, listener);
                 itemListenerRemovers.splice(array[O].indexOf(item), 1);
             });
         };
@@ -744,12 +630,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             });
             result.splice(start, deleted.length, ...inserted.map(item => item[O]));
         };
-        array[C].on("splice", arrayListener);
-
-        result[S] = () => {
-            itemListenerRemovers.splice(0).forEach(remove => remove());
-            array[C].off("splice", arrayListener);
-        };
+        array[C].on("splice", arrayListener, result);
 
         return result;
     }
@@ -760,11 +641,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
             const lengthToAdd = length - result[O].length;
             result.splice(result[O].length + lengthToAdd, -lengthToAdd, ...(new OriginalArray(lengthToAdd > 0 ? lengthToAdd : 0).fill(null)));
         };
-        length[C].on("set", lengthListener);
-
-        result[S] = () => {
-            length[C].off("set", lengthListener);
-        };
+        length[C].on("set", lengthListener, result);
 
         return result;
     }

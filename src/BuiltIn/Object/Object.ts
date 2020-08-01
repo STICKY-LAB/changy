@@ -7,9 +7,10 @@ import Function from "../Primitive/Function";
 import OriginalFunction from "../Originals/Function";
 import OriginalNumber from "../Originals/Number";
 import OriginalString from "../Originals/String";
+import cF from "../../Util/cF";
 
 export interface ObjectChangeEventEmitter<T extends OriginalObject> extends ChangeEventEmitter {
-    on(event : "set", listener : (name : PropertyKey, value : T[keyof T], beforeValue : T[keyof T], beforeSetted : boolean) => void) : this
+    on(event : "set", listener : (name : PropertyKey, value : T[keyof T], beforeValue : T[keyof T], beforeSetted : boolean) => void, output? : Changeable<any>) : this
     on(event : "unset", listener : (name : PropertyKey, value : T[keyof T]) => void) : this
     on(event: string, listener: OriginalFunction): this
     on(event: RegExp, listener: OriginalFunction): this
@@ -23,24 +24,14 @@ export interface ObjectChangeEventEmitter<T extends OriginalObject> extends Chan
 export default class Object_<T extends OriginalObject> extends Changeable<T> {
     readonly [C]: ObjectChangeEventEmitter<T>
     readonly [O]: T
-    Get<K extends keyof T>(name : Primitive<K>) {
-        const result = new Primitive(this[O][name[O]]);
 
-        const listener = () => {
-            result.set((<any>this[O])[name[O]]);
-        };
-        const nameListener = (name : K) => {
-            result.set((<any>this[O])[name]);
-        };
+    constructor(original : T) {
+        super(original);
+        this[C].defineEvents(["set", "unset"]);
+    }
 
-        this[C].onAny(listener);
-        name[C].on("set", nameListener);
-
-        result[S] = () => {
-            this[C].offAny(listener);
-            name[C].off("set", nameListener);
-        };
-
+    Get<K extends keyof T>(key : Primitive<K>) {
+        const result = cF((obj, key) => obj[key])(this, key);
         return result;
     }
     set<K extends keyof T>(name : K, value : T[K]) {
@@ -94,11 +85,7 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
             }
         };
 
-        obj[C].addListeners(objListeners);
-
-        result[S] = () => {
-            obj[C].removeListeners(objListeners);
-        };
+        obj[C].addListeners(objListeners, result);
 
         return result;
     }
@@ -129,13 +116,8 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
             }
         };
 
-        keys[C].on("splice", keysListener);
-        obj[C].addListeners(objListeners);
-
-        result[S] = () => {
-            keys[S]();
-            obj[C].removeListeners(objListeners);
-        };
+        keys[C].on("splice", keysListener, result);
+        obj[C].addListeners(objListeners, result);
 
         return result;
     }
@@ -166,13 +148,8 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
             }
         };
 
-        keys[C].on("splice", keysListener);
-        obj[C].addListeners(objListeners);
-
-        result[S] = () => {
-            keys[S]();
-            obj[C].removeListeners(objListeners);
-        };
+        keys[C].on("splice", keysListener, result);
+        obj[C].addListeners(objListeners, result);
 
         return result;
     }
@@ -188,17 +165,13 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
             });
         };
 
-        entries[C].on("splice", entriesListener);
-
-        result[S] = () => {
-            entries[C].off("splice", entriesListener);
-        };
+        entries[C].on("splice", entriesListener, result);
 
         return result;
     }
 
     static FromChangeable<T>(obj : Object_<{[K in keyof T]: Changeable<T[K]>}>) {
-        const result = new Object_<T>(OriginalObject.fromEntries(OriginalObject.entries(obj).map(([name, value]) => [name, value[O]])));
+        const result = new Object_<T>(<any>OriginalObject.fromEntries(OriginalObject.entries(obj).map(([name, value]) => [name, value[O]])));
 
         const valueListenerRemovers : {[name : string]: () => void} = {};
         const addValueListener = (name : keyof T, value : Changeable<T[keyof T]>) => {
@@ -207,9 +180,9 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
                     result.set(name, value[O]);
                 }
             };
-            value[C].onAny(listener);
+            value[C].on(/^/, listener);
             (<any>valueListenerRemovers)[name] = () => {
-                value[C].offAny(listener);
+                value[C].off(/^/, listener);
                 delete (<any>valueListenerRemovers)[name];
             };
         };
@@ -229,12 +202,7 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
             }
         };
 
-        obj[C].addListeners(objListeners);
-
-        result[S] = () => {
-            OriginalObject.values(valueListenerRemovers).forEach(remove => remove());
-            obj[C].removeListeners(objListeners);
-        };
+        obj[C].addListeners(objListeners, result);
 
         return result;
     }

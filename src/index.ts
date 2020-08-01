@@ -27,8 +27,8 @@ export {
     Boolean,
     Function,
     Number,
-    Primitive,
     String,
+    Primitive,
 
     cF,
     iF,

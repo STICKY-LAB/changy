@@ -13,43 +13,9 @@ Changeable has following properties : \[O\], \[C\], \[S\] (Symbol).
 Changeable class is used to wrap non-changeable class.
 \[O\] property used to have original object.
 \[C\] property is EventEmitter, used to emit / listen object changing event.
-\[S\] method is used to stop Changeable changing, you can use it like to set onStop listener by set the property.
+\[S\] method is used to disconnect all connections(inputs and outputs).
 
 
-```js
-const { Changeable, O, C, S } = require("changy");
-
-class A extends Changeable { //Don't use Changeable class like this! It's just for test.
-    constructor() {
-        super(arguments);
-        this[S] = (() => {
-            console.log("stop A");
-        });
-    }
-}
-class B extends A {
-    constructor() {
-        super(arguments);
-        this[S] = (() => {
-            console.log("stop B");
-        });
-    }
-}
-
-console.log("--- Stop method test ---");
-(() => {
-    const b = new B(undefined);
-    b[S] = (() => {
-        console.log("stop custom");
-    });
-
-    b[S]();
-    log
-    // stop A
-    // stop B
-    // stop custom
-})();
-```
 # Examples
 ## Array
 ```js
@@ -67,7 +33,7 @@ console.log("--- Array test ---");
 
         const concatArrays = new Array([array2]);
         const concated = array1.Concat(concatArrays);
-        concated[C].onAny(() => {
+        concated[C].on(/^/, () => {
             console.log(concated[O]);
         });
 
@@ -255,6 +221,7 @@ console.log("--- Array test ---");
         array.splice(1,2,"apple");
     }
 })();
+
 ```
 ## Function
 ```js
@@ -377,6 +344,7 @@ console.log("--- Function test ---");
         });
     }
 })();
+
 ```
 ## Number
 ```js
@@ -433,7 +401,7 @@ console.log("--- Object test ---");
     {
         const obj = new Object({});
         const keys = Object.Keys(obj);
-        keys[C].onAny(() => {
+        keys[C].on(/^/, () => {
             console.log(keys[O]);
         });
     
@@ -451,7 +419,7 @@ console.log("--- Object test ---");
     {
         const obj = new Object({});
         const values = Object.Values(obj);
-        values[C].onAny(() => {
+        values[C].on(/^/, () => {
             console.log(values[O]);
         });
     
@@ -469,7 +437,7 @@ console.log("--- Object test ---");
     {
         const obj = new Object({});
         const entries = Object.Entries(obj);
-        entries[C].onAny(() => {
+        entries[C].on(/^/, () => {
             console.log(entries[O]);
         });
     
@@ -491,7 +459,7 @@ console.log("--- Object test ---");
             return ["value_of_" + prop, value * 2];
         })));
     
-        mapped[C].onAny(() => {
+        mapped[C].on(/^/,() => {
             console.log(mapped[O]);
         });
 

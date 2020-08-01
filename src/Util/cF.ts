@@ -8,6 +8,8 @@ type ArrayKeys<Arr extends Array<any>> = Remove<
     | "sort" | "splice" | "unshift" | "indexOf" | "lastIndexOf" | "every" | "some" | "forEach" | "map" | "filter" | "reduce"
     | "reduceRight" | "find" | "findIndex" | "fill" | "copyWithin" | "entries" | "keys" | "values" | "includes" | "flatMap" | "flat"
 >;
+
+type C = ArrayKeys<[1,2,3]>
 //Args types can make some errors.
 
 export default function cF
@@ -34,14 +36,8 @@ export default function cF
         };
 
         args.forEach((arg) => {
-            arg[C].onAny(listener);
+            arg[C].on(/^/, listener, result);
         });
-
-        result[S] = () => {
-            args.forEach((arg) => {
-                arg[C].offAny(listener);
-            });
-        };
     
         return result;
     });

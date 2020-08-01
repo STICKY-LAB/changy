@@ -7,7 +7,7 @@ console.log("--- Object test ---");
     {
         const obj = new Object({});
         const keys = Object.Keys(obj);
-        keys[C].onAny(() => {
+        keys[C].on(/^/, () => {
             console.log(keys[O]);
         });
     
@@ -25,7 +25,7 @@ console.log("--- Object test ---");
     {
         const obj = new Object({});
         const values = Object.Values(obj);
-        values[C].onAny(() => {
+        values[C].on(/^/, () => {
             console.log(values[O]);
         });
     
@@ -43,7 +43,7 @@ console.log("--- Object test ---");
     {
         const obj = new Object({});
         const entries = Object.Entries(obj);
-        entries[C].onAny(() => {
+        entries[C].on(/^/, () => {
             console.log(entries[O]);
         });
     
@@ -65,7 +65,7 @@ console.log("--- Object test ---");
             return ["value_of_" + prop, value * 2];
         })));
     
-        mapped[C].onAny(() => {
+        mapped[C].on(/^/,() => {
             console.log(mapped[O]);
         });
 

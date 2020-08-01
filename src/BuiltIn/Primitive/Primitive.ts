@@ -3,7 +3,7 @@ import ChangeEventEmitter from "../../Changeable/ChangeEventEmitter";
 import Boolean from "./Boolean";
 
 export interface PrimitiveChangeEventEmitter<T> extends ChangeEventEmitter {
-    on(event : "set", listener : (value : T, prevValue : T) => void) : this
+    on(event : "set", listener : (value : T, prevValue : T) => void, output : Changeable<any>) : this
     on(event: string, listener: Function): this
     on(event: RegExp, listener: Function): this
 
@@ -17,6 +17,7 @@ class Primitive<T> extends Changeable<T> {
     [O]: T
     constructor(value : T) {
         super(value);
+        this[C].defineEvents(["set"]);
     }
     set(value : T) {
         const prevValue = this[O];
