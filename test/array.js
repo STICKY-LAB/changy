@@ -25,7 +25,6 @@ console.log("--- Array test ---");
         concatArrays.push(array3);
         concatArrays.splice(0,1);
         concatArrays.splice(0,1);
-        
     }
 
     // fill

@@ -3,7 +3,7 @@ import ChangeEventEmitter from "./ChangeEventEmitter";
 
 export const C = Symbol("ChangeEventEmitter");
 export const O = Symbol("OriginalObject");
-export const S = Symbol("StopChange");    //Stop change.
+export const S = Symbol("StopChange");
 export const IN = Symbol("In");
 export const OUT = Symbol("Out");
 

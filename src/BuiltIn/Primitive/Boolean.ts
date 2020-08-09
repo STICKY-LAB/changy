@@ -8,7 +8,7 @@ export default class Boolean extends Primitive<boolean> {
         const result = cF((boolean : boolean) => boolean.toString(), String)(this);
         return result;
     }
-    ValueOf(this : Boolean) {
+    ValueOf() {
         const result = cF((boolean : boolean) => boolean.valueOf(), Boolean)(this);
         return result;
     }

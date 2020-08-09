@@ -43,7 +43,7 @@ class ChangeEventEmitter extends EventEmitter {
             
             input.outputs.splice(input.outputs.indexOf(this), 1);
 
-            if(!input.stopped && !input.outputs.length && !input.in) input.stop();
+            if(!input.stopped && !input.hasOut && !input.in) input.stop();
             if(!this.stopped && !this.inputs.length && !this.out) this.stop();
         }
     }
@@ -104,6 +104,9 @@ class ChangeEventEmitter extends EventEmitter {
     }
     get stopped() {
         return !(this.inputs.length || this.outputs.length);
+    }
+    get hasOut() : boolean {
+        return this.out || this.outputs.some(output => output.hasOut);
     }
 };
 

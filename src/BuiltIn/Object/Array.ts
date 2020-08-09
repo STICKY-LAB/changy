@@ -18,19 +18,7 @@ export function realIndex(index : number, length : number) {
     return index < 0 ? (index < -length ? 0 : length + index) : (index > length ? length : index);
 }
 export function changeableRealIndex(index : Number, length : Number) {
-    const result = new Number(index[O] < 0 ? (index[O] < -length ? 0 : length[O] + index[O]) : (index[O] > length[O] ? length[O] : index[O]));
-
-    const indexListener = (index : number) => {
-        result.set(index < 0 ? (index < -length ? 0 : length[O] + index) : (index > length[O] ? length[O] : index));
-    };
-
-    const lengthListener = (length : number) => {
-        result.set(index[O] < 0 ? (index[O] < -length ? 0 : length + index[O]) : (index[O] > length ? length : index[O]));
-    }
-
-    index[C].on("set", indexListener, result);
-    length[C].on("set", lengthListener, result);
-
+    const result = cF(realIndex, Number)(index, length);
     return result;
 }
 
@@ -53,11 +41,12 @@ export interface ArrayChangeEventEmitter<T> extends ChangeEventEmitter {
 export default class Array<T> extends Changeable<OriginalArray<T>> {
     readonly [C]: ArrayChangeEventEmitter<T>
     readonly [O]: OriginalArray<T>;
-    length = cF(array => array.length, Number)(this)[IN]();
+    length: Number;
 
     constructor(original : OriginalArray<T>) {
         super(original);
         this[C].defineEvents(["splice"]);
+        this.length = cF(array => array.length, Number)(this)[IN]();
     }
 
     Get(index : Number) {
@@ -133,7 +122,7 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
     splice(start : number, deleteCount? : number, ...items : T[]) {
         const beforeLength = this[O].length;
         const result = deleteCount !== undefined ? this[O].splice(start, deleteCount, ...items) : this[O].splice(start);
-        if(!(deleteCount === 0 && items.length === 0)) {
+        if(!(result.length === 0 && items.length === 0)) {
             this[C].emit("splice",
                 realIndex(start, beforeLength),
                 result,
@@ -632,6 +621,13 @@ export default class Array<T> extends Changeable<OriginalArray<T>> {
         };
         array[C].on("splice", arrayListener, result);
 
+        return result;
+    }
+    static FromPrimitive<T>(primitive : Primitive<T[]>) {
+        const result = new Array(primitive[O]);
+        primitive[C].on("set", (array : T[]) => {
+            result.splice(0, result[O].length, ...array);
+        }, result);
         return result;
     }
     static FromLength(length: Number) : Array<null> {

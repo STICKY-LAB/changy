@@ -171,7 +171,7 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
     }
 
     static FromChangeable<T>(obj : Object_<{[K in keyof T]: Changeable<T[K]>}>) {
-        const result = new Object_<T>(<any>OriginalObject.fromEntries(OriginalObject.entries(obj).map(([name, value]) => [name, value[O]])));
+        const result = new Object_<T>(<any>OriginalObject.fromEntries(OriginalObject.entries(obj[O]).map(([name, value]) => [name, (<any>value)[O]])));
 
         const valueListenerRemovers : {[name : string]: () => void} = {};
         const addValueListener = (name : keyof T, value : Changeable<T[keyof T]>) => {
@@ -204,6 +204,14 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
 
         obj[C].addListeners(objListeners, result);
 
+        return result;
+    }
+    static FromPrimitive<T>(primitive : Primitive<T>) {
+        const result = new Object_(primitive[O]);
+        primitive[C].on("set", (object : T) => {
+            Object.keys(result[O]).forEach((key : any) => result.delete(key));
+            for(const key in object) result.set(key, object[key]);
+        });
         return result;
     }
 }

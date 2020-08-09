@@ -7,8 +7,8 @@ import Changeable, { O, C, S, IN } from "../../Changeable/Changeable";
 import cF from "../../Util/cF";
 
 export default class Function<T extends OriginalFunction> extends Primitive<T> {
-    length = cF(f => f.length, Number)(this)[IN]();
-    name = cF(f => f.name, String)(this)[IN]();
+    length = cF(f => f.length, Number, true)(this)[IN]();
+    name = cF(f => f.name, String, true)(this)[IN]();
     
     Apply(thisArg : Primitive<any>, argsArray : Array<any> = new Array([])) {
         const result = cF((f, thisArg, argsArray) => f.apply(thisArg, argsArray))(this, thisArg, argsArray);
