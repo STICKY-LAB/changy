@@ -14,6 +14,7 @@ import equals from "./Util/equals";
 import fromC from "./Util/fromC";
 import cast from "./Util/cast";
 import fill from "./Util/fill";
+import isNullish from "./Util/isNullish";
 
 export {
     Changeable,
@@ -40,7 +41,8 @@ export {
     equals,
     fromC,
     cast,
-    fill
+    fill,
+    isNullish
 };
 
 /**
