@@ -23,4 +23,8 @@ export default class RegExp extends Primitive<OriginalRegExp> {
         const result = cF((regexp : OriginalRegExp, str : string) => regexp.test(str), Boolean)(this, str);
         return result;
     }
+    Exec(str : String<string>) {
+        const result = cF((regexp : OriginalRegExp, str : string) => regexp.exec(str))(this, str);
+        return result;
+    }
 }
