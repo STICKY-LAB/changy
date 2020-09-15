@@ -13,6 +13,7 @@ import iF from "./Util/iF";
 import equals from "./Util/equals";
 import fromC from "./Util/fromC";
 import cast from "./Util/cast";
+import fill from "./Util/fill";
 
 export {
     Changeable,
@@ -38,7 +39,8 @@ export {
     iF,
     equals,
     fromC,
-    cast
+    cast,
+    fill
 };
 
 /**
