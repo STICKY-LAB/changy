@@ -9,20 +9,20 @@ import OriginalNumber from "../Originals/Number";
 import OriginalString from "../Originals/String";
 import cF from "../../Util/cF";
 
-export interface ObjectChangeEventEmitter<T extends OriginalObject> extends ChangeEventEmitter {
-    on(event : "set", listener : (name : PropertyKey, value : T[keyof T], beforeValue : T[keyof T], beforeSetted : boolean) => void, output? : Changeable<any>) : this
-    on(event : "unset", listener : (name : PropertyKey, value : T[keyof T]) => void) : this
+export interface ObjectChangeEventEmitter extends ChangeEventEmitter {
+    on(event : "set", listener : (name : PropertyKey, value : any, beforeValue : any, beforeSetted : boolean) => void, output? : Changeable<any>) : this
+    on(event : "unset", listener : (name : PropertyKey, value : any) => void) : this
     on(event: string, listener: OriginalFunction): this
     on(event: RegExp, listener: OriginalFunction): this
 
-    emit(event : "set", name : PropertyKey, value : T[keyof T], beforeValue : T[keyof T], beforeSetted : boolean) : this
-    emit(event : "unset", name : PropertyKey, value : T[keyof T]) : this
+    emit(event : "set", name : PropertyKey, value : any, beforeValue : any, beforeSetted : boolean) : this
+    emit(event : "unset", name : PropertyKey, value : any) : this
     emit(event : string, ...args : any): this
     emit(event : RegExp, ...args : any): this
 }
 
 export default class Object_<T extends OriginalObject> extends Changeable<T> {
-    readonly [C]: ObjectChangeEventEmitter<T>
+    readonly [C]: ObjectChangeEventEmitter
     readonly [O]: T
 
     constructor(original : T) {
@@ -170,7 +170,8 @@ export default class Object_<T extends OriginalObject> extends Changeable<T> {
         return result;
     }
 
-    static FromChangeable<T>(obj : Object_<{[K in keyof T]: Changeable<T[K]>}>) {
+    static FromChangeable<T>(obj : Object_<{[K in keyof T]: Changeable<T[K]>}>)
+    {
         const result = new Object_<T>(<any>OriginalObject.fromEntries(OriginalObject.entries(obj[O]).map(([name, value]) => [name, (<any>value)[O]])));
 
         const valueListenerRemovers : {[name : string]: () => void} = {};
