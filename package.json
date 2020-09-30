@@ -1,6 +1,6 @@
 {
   "name": "changy",
-  "version": "10.1.4",
+  "version": "10.1.5",
   "description": "Changy makes built-in objects reactive. Extensible.",
   "main": "./dist/index.js",
   "scripts": {

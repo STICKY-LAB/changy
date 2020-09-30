@@ -25,6 +25,11 @@ class Primitive<T> extends Changeable<T> {
         this[O] = value;
         this[C].emit("set", value, prevValue);
     }
+    static FromPromise<T>(promise : Promise<T>) {
+        const result = new Primitive<T>(undefined);
+        promise.then(value => result.set(value));
+        return result;
+    }
 }
 
 export default Primitive;
